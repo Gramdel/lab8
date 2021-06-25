@@ -5,11 +5,14 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import javafx.application.Application;
+import javafx.stage.Stage;
 
-public class Main {
+public class Main extends Application {
     private static Logger logger;
 
     public static void main(String[] args) {
+        Application.launch();
         if (args.length<2) {
             System.out.println("Программа не запущена, так как не переданы IP (или hostname) и порт сервера!\n(Они должны быть переданы через аргументы командной строки. Формат IP: xxx.xxx.xxx.xxx; формат hostname: непустая строка; формат порта: число от 1 до 65535.)");
         } else {
@@ -43,6 +46,12 @@ public class Main {
                 logger.log(Level.WARNING,"Не удалось запустить программу из-за неправильного формата порта: "+args[1]+"!");
             }
         }
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        primaryStage.setTitle("PRODMAN");
+        primaryStage.show();
     }
 
     public static Logger getLogger() {
