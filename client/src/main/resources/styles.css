@@ -1,0 +1,13 @@
+.blue-button {
+    -fx-background-color: #1600D9;
+    -fx-text-fill: white;
+    -fx-font-family: Consolas;
+    -fx-font-weight: Bold;
+    -fx-font-size: 20;
+}
+.transparent-button {
+    -fx-background-color: transparent;
+    -fx-font-family: Consolas;
+    -fx-font-weight: Bold;
+    -fx-font-size: 20;
+}

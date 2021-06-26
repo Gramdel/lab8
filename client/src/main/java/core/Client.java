@@ -14,13 +14,14 @@ public class Client {
     private static String hostname;
     private static int port;
     private static User user;
+    private static String content;
 
     public static void setProperties(String hostname, int port) {
         Client.hostname = hostname;
         Client.port = port;
     }
 
-    public static void setUser() {
+    public static void settUser() {
         System.out.println("Вас приветствует программа-клиент для управления коллекцией продуктов!");
         Scanner in = new Scanner(System.in);
         while (true) {
@@ -79,17 +80,18 @@ public class Client {
                     getLogger().log(Level.INFO, "Ответ от сервера успешно получен!");
                     System.out.println(new String(b).trim());
                 } catch (SocketTimeoutException e) {
-                    System.out.println("Время ожидания ответа от сервера истекло!");
+                    content = "Время ожидания ответа от сервера истекло!";
                     getLogger().log(Level.WARNING, "Время ожидания ответа от сервера истекло!");
                 }
             } catch (SocketException e) {
-                System.out.println("Ошибка отправки пакета!");
+                content = "Ошибка отправки пакета!";
                 getLogger().log(Level.WARNING, "Ошибка отправки пакета!");
             } catch (IllegalArgumentException e) {
-                System.out.println("Не удаётся подключиться к серверу " + hostname + ":" + port + "! Проверьте данные для подключения.");
+                content = "Не удаётся подключиться к серверу " + hostname + ":" + port + "! Проверьте данные для подключения.";
                 getLogger().log(Level.WARNING, "Не удаётся подключиться к серверу " + hostname + ":" + port + "!");
             }
         } catch (IOException e) {
+            content = "Ошибка сериализации!";
             getLogger().log(Level.WARNING, "Ошибка сериализации!");
         }
     }
@@ -120,50 +122,42 @@ public class Client {
                     try {
                         user = (User) objectInputStream.readObject();
                         getLogger().log(Level.INFO, "Успешная десериализация пользователя с именем " + user.getName() + " и паролем " + user.getPassword() + "!");
-                        switch (user.getErrorId()) {
-                            case 0:
-                                return user;
-                            case 1:
-                                System.out.println("Неправильный пароль! Повторите ввод.");
-                                break;
-                            case 2:
-                                System.out.println("Пользователя с таким именем и паролем не существует! Повторите ввод.");
-                                break;
-                            case 3:
-                                System.out.println("При проверке/создании имени пользователя и пароля возникла ошибка SQL! Повторите ввод.");
-                                break;
-                            case 4:
-                                System.out.println("Пользователь с таким именем уже зарегистрирован! Повторите ввод.");
-                                break;
-                        }
-                        return null;
+                        return user;
                     } catch (ClassNotFoundException e) {
-                        System.out.println("Ошибка десериализации пользователя! Повторите ввод.");
+                        content = "Ошибка десериализации!";
                         getLogger().log(Level.WARNING, "Ошибка десериализации пользователя!");
                         return null;
                     }
                 } catch (SocketTimeoutException e) {
-                    System.out.println("Время ожидания ответа о пользователе от сервера истекло! Повторите ввод.");
+                    content = "Время ожидания ответа от сервера истекло!";
                     getLogger().log(Level.WARNING, "Время ожидания ответа о пользователе от сервера истекло!");
                     return null;
                 }
             } catch (SocketException e) {
-                System.out.println("Ошибка отправки пакета о пользователе! Повторите ввод.");
+                content = "Ошибка отправки пакета!";
                 getLogger().log(Level.WARNING, "Ошибка отправки пакета о пользователе!");
                 return null;
             } catch (IllegalArgumentException e) {
-                System.out.println("Не удаётся подключиться к серверу " + hostname + ":" + port + "! Проверьте данные для подключения, повторите ввод.");
+                content = "Не удаётся подключиться к серверу " + hostname + ":" + port + "!";
                 getLogger().log(Level.WARNING, "Не удаётся подключиться к серверу " + hostname + ":" + port + "!");
                 return null;
             }
         } catch (IOException e) {
-            System.out.println("Ошибка сериализации пользователя! Повторите ввод.");
+            content = "Ошибка сериализации!";
             getLogger().log(Level.WARNING, "Ошибка сериализации пользователя!");
             return null;
         }
     }
 
+    public static void setUser(User user) {
+        Client.user = user;
+    }
+
     public static User getUser() {
         return user;
+    }
+
+    public static String getContent() {
+        return content;
     }
 }

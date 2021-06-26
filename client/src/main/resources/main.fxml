@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="503.0" prefWidth="869.0" style="-fx-background-color: #2e3348;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
+    <children>
+        <AnchorPane layoutY="86.0" prefHeight="410.0" prefWidth="800.0" style="-fx-background-color: #fafafa;">
+            <children>
+                <TableView fx:id="tableOfProducts" layoutY="-1.0" prefHeight="416.0" prefWidth="870.0">
+                    <columns>
+                        <TableColumn fx:id="idColumn" prefWidth="65.60000306367874" text="id" />
+                        <TableColumn fx:id="nameColumn" prefWidth="53.5999755859375" text="name" />
+                        <TableColumn fx:id="xColumn" prefWidth="56.800018310546875" text="x" />
+                        <TableColumn fx:id="yColumn" prefWidth="96.00001525878906" text="y" />
+                        <TableColumn fx:id="priceColumn" prefWidth="72.0" text="price" />
+                        <TableColumn fx:id="partNumberColumn" prefWidth="79.20001220703125" text="partNumber" />
+                        <TableColumn fx:id="manufactureCostColumn" prefWidth="62.4000244140625" text="manufactureCost" />
+                        <TableColumn fx:id="unitOfMeasureColumn" prefWidth="59.200042724609375" text="unitOfMeasure" />
+                        <TableColumn fx:id="manufacturerColumn" prefWidth="68.79998779296875" text="manufacturerName" />
+                        <TableColumn fx:id="annualTurnoverColumn" prefWidth="64.79998779296875" text="annualTurnover" />
+                        <TableColumn fx:id="employeesCountColumn" prefWidth="61.60003662109375" text="employeesCount" />
+                        <TableColumn fx:id="creationDateColumn" prefWidth="88.800048828125" text="creationDate" />
+                        <TableColumn fx:id="ownerColumn" prefWidth="38.39990234375" text="owner" />
+                    </columns>
+                </TableView>
+            </children>
+        </AnchorPane>
+        <Label layoutX="331.0" layoutY="14.0" text="PRODMAN" textFill="WHITE">
+            <font>
+                <Font name="Consolas Bold" size="47.0" />
+            </font>
+        </Label>
+        <AnchorPane layoutX="27.0" layoutY="18.0" prefHeight="42.0" prefWidth="170.0" style="-fx-background-color: #fafafa;">
+            <children>
+                <Label fx:id="userInfoLable" layoutX="14.0" layoutY="2.0" prefHeight="38.0" prefWidth="221.0">
+                    <font>
+                        <Font name="Microsoft YaHei Light" size="14.0" />
+                    </font>
+                </Label>
+            </children>
+        </AnchorPane>
+        <Button fx:id="toCommandsButton" layoutX="597.0" layoutY="47.0" mnemonicParsing="false" text="К списку команд">
+            <font>
+                <Font name="Microsoft YaHei Light" size="12.0" />
+            </font>
+        </Button>
+        <Button fx:id="toMapButton" layoutX="787.0" layoutY="14.0" mnemonicParsing="false" text="Карта">
+            <font>
+                <Font name="Microsoft YaHei Light" size="12.0" />
+            </font>
+        </Button>
+        <Button fx:id="toFilterButton" layoutX="689.0" layoutY="14.0" mnemonicParsing="false" text="Фильтр">
+            <font>
+                <Font name="Microsoft YaHei Light" size="12.0" />
+            </font>
+        </Button>
+        <Button fx:id="resetTableButton" layoutX="597.0" layoutY="14.0" mnemonicParsing="false" text="Сброс">
+            <font>
+                <Font name="Microsoft YaHei Light" size="12.0" />
+            </font>
+        </Button>
+        <Button fx:id="exitButton" layoutX="726.0" layoutY="47.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="109.0" text="Выход">
+            <font>
+                <Font name="Microsoft YaHei Light" size="12.0" />
+            </font>
+        </Button>
+    </children>
+</AnchorPane>
