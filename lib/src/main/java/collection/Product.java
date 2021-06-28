@@ -42,16 +42,16 @@ public class Product implements Comparable<Product>, Serializable {
     @Override
     public String toString() {
         return "{\n" +
-                "\tid = " + id + ",\n" +
-                "\tname = " + name + ",\n" +
-                "\tcoordinates = " + coordinates + ",\n" +
-                "\tcreationDate = " + (DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").format(creationDate)) + ",\n" +
-                "\tprice = " + price + ",\n" +
-                "\tpartNumber = " + partNumber + ",\n" +
-                "\tmanufactureCost = " + manufactureCost + ",\n" +
-                "\tunitOfMeasure = " + unitOfMeasure + ",\n" +
-                "\tmanufacturer = " + manufacturer + "\n" +
-                "\towner = " + user.getName() + "\n" +
+                "\"id\" : " + id + ",\n" +
+                "\"name\" : \"" + name + "\",\n" +
+                "\"coordinates\" : " + coordinates + ",\n" +
+                "\"creationDate\" : \"" + (DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").format(creationDate)) + "\",\n" +
+                "\"price\" : " + price + ",\n" +
+                "\"partNumber\" : \"" + partNumber + "\",\n" +
+                "\"manufactureCost\" : " + manufactureCost + ",\n" +
+                "\"unitOfMeasure\" : \"" + unitOfMeasure + "\",\n" +
+                "\"manufacturer\" : " + manufacturer + ",\n" +
+                "\"owner\" : \"" + user.getName() + "\"\n" +
                 "}";
     }
 
@@ -85,6 +85,10 @@ public class Product implements Comparable<Product>, Serializable {
 
     public ZonedDateTime getCreationDate() {
         return creationDate;
+    }
+
+    public String getFormattedCreationDate() {
+        return DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").format(creationDate);
     }
 
     public void setCreationDate(ZonedDateTime creationDate) {
@@ -122,5 +126,33 @@ public class Product implements Comparable<Product>, Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Double getX() {
+        return coordinates.getX();
+    }
+
+    public Long getY() {
+        return coordinates.getY();
+    }
+
+    public String getOwner() {
+        return user.getName();
+    }
+
+    public Long getAnnualTurnover() {
+        return manufacturer.getAnnualTurnover();
+    }
+
+    public Long getEmployeesCount() {
+        return manufacturer.getEmployeesCount();
+    }
+
+    public OrganizationType getType() {
+        return manufacturer.getType();
+    }
+
+    public String getManufacturerName() {
+        return manufacturer.getName();
     }
 }

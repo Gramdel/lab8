@@ -28,10 +28,11 @@ public class Show extends Command {
     public synchronized String execute(LinkedHashSet<Product> collection, ArrayList<Organization> organizations, Date date, DBUnit dbUnit) {
         if (collection.size() > 0) {
             StringBuilder msg = new StringBuilder();
-            collection.stream().sorted(Product.byIdComparator).forEach(p -> msg.append("\n").append(p));
-            return "Элементы коллекции:" + msg;
+            collection.stream().min(Product.byIdComparator).ifPresent(msg::append);
+            collection.stream().sorted(Product.byIdComparator).skip(1).forEach(p -> msg.append(",\n").append(p));
+            return msg.toString();
         } else {
-            return "Коллекция пуста!";
+            return null;
         }
     }
 

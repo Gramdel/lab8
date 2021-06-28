@@ -57,7 +57,7 @@ public class Client {
         }
     }
 
-    public static void sendCommandAndReceiveResult(Command command) {
+    public static String sendCommandAndReceiveResult(Command command) {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
@@ -78,7 +78,7 @@ public class Client {
                     packet = new DatagramPacket(b, b.length);
                     socket.receive(packet);
                     getLogger().log(Level.INFO, "Ответ от сервера успешно получен!");
-                    System.out.println(new String(b).trim());
+                    return new String(b).trim();
                 } catch (SocketTimeoutException e) {
                     content = "Время ожидания ответа от сервера истекло!";
                     getLogger().log(Level.WARNING, "Время ожидания ответа от сервера истекло!");
@@ -94,6 +94,7 @@ public class Client {
             content = "Ошибка сериализации!";
             getLogger().log(Level.WARNING, "Ошибка сериализации!");
         }
+        return null;
     }
 
     public static User sendAndReceiveUser(User user) {

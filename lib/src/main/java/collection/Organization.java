@@ -60,7 +60,7 @@ public class Organization implements Serializable {
 
     @Override
     public String toString() {
-        return "{" + id + ", " + name + ", " + annualTurnover + ", " + employeesCount + ", " + type + "}";
+        return "{\"id\" : " + id + ", \"name\" : \"" + name + "\", \"annualTurnover\" : " + annualTurnover + ", \"employeesCount\" : " + employeesCount + ", \"type\" : " + (type != null ? "\"" + type + "\"" : type) + "}";
     }
 
     public String getName() {

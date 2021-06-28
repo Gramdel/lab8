@@ -12,7 +12,7 @@ import javafx.scene.shape.Line;
 
 import java.io.IOException;
 
-import static core.Main.getPrimaryStage;
+import static core.WindowManager.*;
 
 public class StartController extends Controller {
 
@@ -53,34 +53,34 @@ public class StartController extends Controller {
                 underlineRegister.setVisible(false);
                 proceedButton.setText("ВХОД");
                 errorLabel.setText("");
-                getPrimaryStage().getScene().setCursor(Cursor.DEFAULT);
+                getScene().setCursor(Cursor.DEFAULT);
             }
         });
 
         authorisationButton.setOnMouseEntered(event -> {
             if (mode == 1) {
-                getPrimaryStage().getScene().setCursor(Cursor.HAND);
+                getScene().setCursor(Cursor.HAND);
                 authorisationButton.setTextFill(Color.web("#BEB7BF"));
             }
         });
 
         authorisationButton.setOnMouseExited(event -> {
             if (mode == 1) {
-                getPrimaryStage().getScene().setCursor(Cursor.DEFAULT);
+                getScene().setCursor(Cursor.DEFAULT);
                 authorisationButton.setTextFill(Color.web("#838aa2"));
             }
         });
 
         registrationButton.setOnMouseEntered(event -> {
             if (mode == 0) {
-                getPrimaryStage().getScene().setCursor(Cursor.HAND);
+                getScene().setCursor(Cursor.HAND);
                 registrationButton.setTextFill(Color.web("#BEB7BF"));
             }
         });
 
         registrationButton.setOnMouseExited(event -> {
             if (mode == 0) {
-                getPrimaryStage().getScene().setCursor(Cursor.DEFAULT);
+                getScene().setCursor(Cursor.DEFAULT);
                 registrationButton.setTextFill(Color.web("#838aa2"));
             }
         });
@@ -94,7 +94,7 @@ public class StartController extends Controller {
                 underlineRegister.setVisible(true);
                 proceedButton.setText("РЕГИСТРАЦИЯ");
                 errorLabel.setText("");
-                getPrimaryStage().getScene().setCursor(Cursor.DEFAULT);
+                getScene().setCursor(Cursor.DEFAULT);
             }
         });
 
@@ -121,12 +121,12 @@ public class StartController extends Controller {
         });
 
         proceedButton.setOnMouseEntered(event -> {
-            getPrimaryStage().getScene().setCursor(Cursor.HAND);
+            getScene().setCursor(Cursor.HAND);
             proceedButton.setStyle("-fx-background-color: #4E3BEC");
         });
 
         proceedButton.setOnMouseExited(event -> {
-            getPrimaryStage().getScene().setCursor(Cursor.DEFAULT);
+            getScene().setCursor(Cursor.DEFAULT);
             proceedButton.setStyle("-fx-background-color: #1600D9");
         });
 
@@ -139,7 +139,7 @@ public class StartController extends Controller {
 
     @FXML
     void proceed() {
-        getPrimaryStage().getScene().setCursor(Cursor.WAIT);
+        getScene().setCursor(Cursor.WAIT);
         String name = loginField.getText().trim();
         String password = passwordField.getText().trim();
         if (name.isEmpty()) {
@@ -157,8 +157,9 @@ public class StartController extends Controller {
                     case 0:
                         Main.setUser(user);
                         try {
-                            changeScene("/main.fxml","PRODMAN: Управление коллекцией продуктов");
+                            changeScene("main.fxml","PRODMAN: Управление коллекцией продуктов");
                         } catch (IOException e) {
+                            e.printStackTrace();
                             showAlert(Alert.AlertType.ERROR, "Error", "Ошибка смены сцены", e.getMessage());
                         }
                         break;
@@ -180,6 +181,6 @@ public class StartController extends Controller {
                 showAlert(Alert.AlertType.ERROR, "Error", header, Client.getContent());
             }
         }
-        getPrimaryStage().getScene().setCursor(Cursor.DEFAULT);
+        getScene().setCursor(Cursor.DEFAULT);
     }
 }
