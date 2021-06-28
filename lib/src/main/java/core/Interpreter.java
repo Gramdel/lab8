@@ -21,7 +21,7 @@ public abstract class Interpreter {
         commands.put("remove_by_id", new RemoveById(user));
         commands.put("update", new Update(user));
         commands.put("info", new Info(user));
-        commands.put("remove_any_by_unit_of_measure", new RemoveByUOM(user));
+        commands.put("remove_any_by_uom", new RemoveByUOM(user));
         commands.put("filter_by_manufacturer", new FilterByManufacturer(user));
         commands.put("add_if_max", new AddIfMax(user));
         commands.put("print_field_descending_price", new PrintPrice(user));

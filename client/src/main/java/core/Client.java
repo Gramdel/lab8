@@ -30,7 +30,7 @@ public class Client {
                 String check = in.nextLine();
                 if (!check.equals("1") & !check.equals("2") & !check.equals("3")) {
                     throw new InputMismatchException();
-                } else if (check.equals("3")){
+                } else if (check.equals("3")) {
                     System.out.println("Программа завершает работу.");
                     System.exit(1);
                 } else {
@@ -57,7 +57,7 @@ public class Client {
         }
     }
 
-    public static String sendCommandAndReceiveResult(Command command) {
+    public static synchronized String sendCommandAndReceiveResult(Command command) {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
@@ -68,7 +68,7 @@ public class Client {
             try {
                 SocketAddress address = new InetSocketAddress(hostname, port);
                 DatagramSocket socket = new DatagramSocket();
-                socket.setSoTimeout(5000);
+                socket.setSoTimeout(1000);
                 DatagramPacket packet = new DatagramPacket(b, b.length, address);
                 socket.send(packet);
                 getLogger().log(Level.INFO, "Команда " + command.getClass().getSimpleName() + " успешно отправлена на сервер " + hostname + ":" + port + "!");
@@ -108,7 +108,7 @@ public class Client {
             try {
                 SocketAddress address = new InetSocketAddress(hostname, port);
                 DatagramSocket socket = new DatagramSocket();
-                socket.setSoTimeout(5000);
+                socket.setSoTimeout(150);
                 DatagramPacket packet = new DatagramPacket(b, b.length, address);
                 socket.send(packet);
                 getLogger().log(Level.INFO, "Пользователь успешно отправлен на сервер " + hostname + ":" + port + "!");

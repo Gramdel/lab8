@@ -32,7 +32,7 @@ public class Show extends Command {
             collection.stream().sorted(Product.byIdComparator).skip(1).forEach(p -> msg.append(",\n").append(p));
             return msg.toString();
         } else {
-            return null;
+            return "0";
         }
     }
 

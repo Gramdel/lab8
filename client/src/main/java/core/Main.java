@@ -17,8 +17,9 @@ import static core.WindowManager.showAlert;
 
 public class Main extends Application {
     private static Logger logger;
-    private static User user;
     private static String[] args;
+    private static User user;
+    private static InterpreterForClient interpreter;
 
     public static void main(String[] args) {
         Main.args = args;
@@ -81,5 +82,13 @@ public class Main extends Application {
 
     public static User getUser() {
         return user;
+    }
+
+    public static void setInterpreter(InterpreterForClient interpreter) {
+        Main.interpreter = interpreter;
+    }
+
+    public static InterpreterForClient getInterpreter() {
+        return interpreter;
     }
 }

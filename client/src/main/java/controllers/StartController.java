@@ -1,6 +1,7 @@
 package controllers;
 
 import core.Client;
+import core.InterpreterForClient;
 import core.Main;
 import core.User;
 import javafx.fxml.FXML;
@@ -137,7 +138,6 @@ public class StartController extends Controller {
         });
     }
 
-    @FXML
     void proceed() {
         getScene().setCursor(Cursor.WAIT);
         String name = loginField.getText().trim();
@@ -156,6 +156,7 @@ public class StartController extends Controller {
                 switch (user.getErrorId()) {
                     case 0:
                         Main.setUser(user);
+                        Main.setInterpreter(new InterpreterForClient(user));
                         try {
                             changeScene("main.fxml","PRODMAN: Управление коллекцией продуктов");
                         } catch (IOException e) {

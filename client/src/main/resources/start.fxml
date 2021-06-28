@@ -28,7 +28,7 @@
                         <Font name="Consolas" size="18.0" />
                     </font>
                 </Label>
-                <Button fx:id="proceedButton" layoutX="22.0" layoutY="289.0" mnemonicParsing="false" onAction="#proceed" prefHeight="42.0" prefWidth="290.0" styleClass="blue-button" text="ВХОД" />
+                <Button fx:id="proceedButton" layoutX="22.0" layoutY="289.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="290.0" styleClass="blue-button" text="ВХОД" />
             </children>
         </AnchorPane>
       <Label layoutX="656.0" layoutY="52.0" text="PRODMAN" textAlignment="CENTER">
@@ -36,6 +36,6 @@
             <Font name="Consolas Bold" size="46.0" />
          </font>
       </Label>
-      <Circle layoutX="849.0" layoutY="79.0" radius="15.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+      <Circle layoutX="849.0" layoutY="79.0" radius="15.0" />
     </children>
 </AnchorPane>

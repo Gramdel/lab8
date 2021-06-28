@@ -41,17 +41,30 @@ public class Product implements Comparable<Product>, Serializable {
 
     @Override
     public String toString() {
-        return "{\n" +
-                "\"id\" : " + id + ",\n" +
-                "\"name\" : \"" + name + "\",\n" +
-                "\"coordinates\" : " + coordinates + ",\n" +
-                "\"creationDate\" : \"" + (DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").format(creationDate)) + "\",\n" +
-                "\"price\" : " + price + ",\n" +
-                "\"partNumber\" : \"" + partNumber + "\",\n" +
-                "\"manufactureCost\" : " + manufactureCost + ",\n" +
-                "\"unitOfMeasure\" : \"" + unitOfMeasure + "\",\n" +
-                "\"manufacturer\" : " + manufacturer + ",\n" +
-                "\"owner\" : \"" + user.getName() + "\"\n" +
+        return "{" +
+                "\"id\" : " + id + "," +
+                "\"name\" : \"" + name + "\"," +
+                "\"coordinates\" : " + coordinates + "," +
+                "\"creationDate\" : \"" + (DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").format(creationDate)) + "\"," +
+                "\"price\" : " + price + "," +
+                "\"partNumber\" : \"" + partNumber + "\"," +
+                "\"manufactureCost\" : " + manufactureCost + "," +
+                "\"unitOfMeasure\" : \"" + unitOfMeasure + "\"," +
+                "\"manufacturer\" : " + manufacturer + "," +
+                "\"owner\" : \"" + user.getName() + "\"" +
+                "}";
+    }
+
+    public String toStringForUpdate() {
+        return "{" +
+                "\"id\" : " + id + ", " +
+                "\"name\" : \"" + name + "\", " +
+                "\"coordinates\" : " + coordinates + ", " +
+                "\"price\" : " + price + ", " +
+                "\"partNumber\" : \"" + partNumber + "\", " +
+                "\"manufactureCost\" : " + manufactureCost + ", " +
+                "\"unitOfMeasure\" : \"" + unitOfMeasure + "\", " +
+                "\"manufacturer\" : " + manufacturer +
                 "}";
     }
 
