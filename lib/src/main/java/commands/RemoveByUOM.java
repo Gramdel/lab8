@@ -33,7 +33,7 @@ public class RemoveByUOM extends Command {
                 }
             }
         } catch (IllegalArgumentException e) {
-            System.out.println("У команды remove_any_by_unit_of_measure должен быть 1 аргумент из следующего списка: " + UnitOfMeasure.valueList() + ".");
+            content = "У команды remove_any_by_unit_of_measure должен быть 1 аргумент из следующего списка: " + UnitOfMeasure.valueList() + ".";
             return false;
         }
         return true;

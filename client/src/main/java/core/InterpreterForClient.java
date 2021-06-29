@@ -41,12 +41,14 @@ public class InterpreterForClient extends Interpreter {
         }
     }
 
-    public void fromString(String com, String arg) {
+    public String fromString(String com, String arg) {
         addToHistory(com);
         Command command = commands.get(com);
         if (command.prepare(arg, false, this)) {
-            System.out.println(Client.sendCommandAndReceiveResult(command));
-            System.out.println(Client.getContent());
+            return Client.sendCommandAndReceiveResult(command);
+        } else {
+            content = command.getContent();
+            return "";
         }
     }
 }

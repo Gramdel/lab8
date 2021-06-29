@@ -43,14 +43,14 @@ public class RemoveGreater extends Command {
             }
             product = Creator.createProduct(product, isInteractive);
             if (product == null) {
-                System.out.println("Команда remove_greater не выполнена!");
+                content = "Команда remove_greater не выполнена, т.к. не получилось создать продукт!";
                 return false;
             }
         } catch (JsonSyntaxException | NumberFormatException e) {
-            System.out.println("Ошибка в синтаксисе JSON-строки!");
+            content = "Ошибка в синтаксисе JSON-строки! "+e.getMessage();
             return false;
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            content = e.getMessage();
             return false;
         }
         this.product = product;
@@ -82,7 +82,11 @@ public class RemoveGreater extends Command {
                 }
             }
             if (prevSize > collection.size()) {
-                return s + "Элементы, цена которых больше цены данного, успешно удалены!";
+                if (s.toString().isEmpty()) {
+                    return "0";
+                } else {
+                    return s + "Не все элементы, цена которых больше цены данного, были удалены!";
+                }
             } else {
                 return s + "Ничего не удалено, т.к. в коллекции нет элементов, цена которых больше цены данного, или возникли ошибки!";
             }
@@ -96,6 +100,6 @@ public class RemoveGreater extends Command {
 
     @Override
     public String syntax() {
-        return " Синтаксис: remove_greater \n\t\t(В скриптах - remove_greater {element}, где {element} - JSON-строка)";
+        return " Синтаксис: remove_greater \n\t(В скриптах - remove_greater {element}";
     }
 }

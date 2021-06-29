@@ -10,10 +10,14 @@ public enum OrganizationType implements Serializable {
 
     public static OrganizationType fromString(String s) {
         if (s != null) {
-            for (OrganizationType type : OrganizationType.values()) {
-                if (s.equals(type.toString())) {
-                    return type;
+            if (!s.isEmpty()) {
+                for (OrganizationType type : OrganizationType.values()) {
+                    if (s.equals(type.toString())) {
+                        return type;
+                    }
                 }
+            } else {
+                return null;
             }
         }
         throw new IllegalArgumentException();

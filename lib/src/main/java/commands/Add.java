@@ -43,14 +43,14 @@ public class Add extends Command {
             }
             product = Creator.createProduct(product, isInteractive);
             if (product == null) {
-                System.out.println("Команда add не выполнена!");
+                content = "Команда add не выполнена, т.к. не получилось создать продукт!";
                 return false;
             }
         } catch (JsonSyntaxException | NumberFormatException e) {
-            System.out.println("Ошибка в синтаксисе JSON-строки!");
+            content = "Ошибка в синтаксисе JSON-строки! "+e.getMessage();
             return false;
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            content = e.getMessage();
             return false;
         }
         product.setUser(user);
@@ -70,7 +70,7 @@ public class Add extends Command {
                 organizations.add(product.getManufacturer());
             }
             collection.add(product);
-            return "Элемент успешно добавлен!";
+            return "0";
         } else {
             return "При добавлении элемента возникла ошибка SQL!";
         }
@@ -83,6 +83,6 @@ public class Add extends Command {
 
     @Override
     public String syntax() {
-        return " Синтаксис: add \n\t\t(В скриптах - add {element}, где {element} - JSON-строка)";
+        return " Синтаксис: add \n\t(В скриптах - add {element})";
     }
 }

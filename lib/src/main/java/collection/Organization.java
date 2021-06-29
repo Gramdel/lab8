@@ -4,11 +4,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Organization implements Serializable {
-    private final String name; //Поле не может быть null, Строка не может быть пустой
-    private final Long annualTurnover; //Поле может быть null, Значение поля должно быть больше 0
-    private final Long employeesCount; //Поле может быть null, Значение поля должно быть больше 0
-    private final OrganizationType type; //Поле может быть null
+    private String name; //Поле не может быть null, Строка не может быть пустой
+    private Long annualTurnover; //Поле может быть null, Значение поля должно быть больше 0
+    private Long employeesCount; //Поле может быть null, Значение поля должно быть больше 0
+    private OrganizationType type; //Поле может быть null
     private Integer id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
+
+    public Organization(){
+
+    }
 
     public Organization(String name, Long annualTurnover, Long employeesCount, OrganizationType type) {
         this.name = name;
@@ -97,5 +101,21 @@ public class Organization implements Serializable {
 
     public Integer getId() {
         return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAnnualTurnover(Long annualTurnover) {
+        this.annualTurnover = annualTurnover;
+    }
+
+    public void setEmployeesCount(Long employeesCount) {
+        this.employeesCount = employeesCount;
+    }
+
+    public void setType(OrganizationType type) {
+        this.type = type;
     }
 }

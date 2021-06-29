@@ -27,25 +27,24 @@ public class ExecuteScript extends Command {
     @Override
     public boolean prepare(String arg, boolean isInteractive, Interpreter interpreter) {
         if (!Files.exists(Paths.get(arg))) {
-            System.out.println("Скрипта с именем " + arg + " не существует!");
+            content = "Скрипта с именем " + arg + " не существует!";
         } else if (Files.isDirectory(Paths.get(arg))) {
-            System.out.println("Скрипт с именем " + arg + " не выполнен, так как в качестве исполняемого файла была передана директория.");
+            content = "Скрипт с именем " + arg + " не выполнен, так как в качестве исполняемого файла была передана директория.";
         } else if (!Files.isRegularFile(Paths.get(arg))) {
-            System.out.println("Скрипт с именем " + arg + " не выполнен, так как в качестве исполняемого файла был передан специальный файл.");
+            content = "Скрипт с именем " + arg + " не выполнен, так как в качестве исполняемого файла был передан специальный файл.";
         } else if (!Files.isReadable(Paths.get(arg))) {
-            System.out.println("Скрипт с именем " + arg + " не выполнен, так как у исполняемого файла нет прав на чтение.");
+            content = "Скрипт с именем " + arg + " не выполнен, так как у исполняемого файла нет прав на чтение.";
         } else if (scripts.contains(arg)) {
-            System.out.println("Скрипт с именем " + arg + " не выполнен, так как он вызывает сам себя!");
+            content = "Скрипт с именем " + arg + " не выполнен, так как он вызывает сам себя!";
         } else {
             try {
-                System.out.println("Скрипт из файла " + arg + " начинает выполняться...");
                 scripts.push(arg);
                 interpreter.fromStream(new BufferedInputStream(new FileInputStream(arg)), false);
                 this.arg = arg;
                 scripts.remove(arg);
                 return true;
             } catch (FileNotFoundException e) {
-                System.out.println("Скрипта с именем " + arg + " не существует!");
+                content = "Скрипта с именем " + arg + " не существует!";
             }
         }
         return false;

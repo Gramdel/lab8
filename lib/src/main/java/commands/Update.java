@@ -36,6 +36,9 @@ public class Update extends Command {
                     if (m.find()) {
                         try {
                             id = Long.parseLong(m.group());
+                            if (id <= 0) {
+                                throw new NumberFormatException();
+                            }
                         } catch (NumberFormatException e) {
                             throw new IllegalArgumentException("У команды update быть 1 аргумент - положительное целое число!");
                         }
@@ -61,14 +64,14 @@ public class Update extends Command {
             }
             product = Creator.createProduct(product, isInteractive);
             if (product == null) {
-                System.out.println("Команда update не выполнена!");
+                content = "Команда update не выполнена, т.к. не получилось создать продукт!";
                 return false;
             }
         } catch (JsonSyntaxException | NumberFormatException e) {
-            System.out.println("Ошибка в синтаксисе JSON-строки!");
+            content = "Ошибка в синтаксисе JSON-строки! "+e.getMessage();
             return false;
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            content = e.getMessage();
             return false;
         }
         product.setUser(user);
@@ -102,7 +105,8 @@ public class Update extends Command {
                     }
                     collection.remove(product);
                     collection.add(this.product);
-                    return "Элемент c id " + id + " успешно обновлён!";
+                    return "0";
+                    //return "Элемент c id " + id + " успешно обновлён!";
                 } else {
                     return "При обновлении элемента с id " + id + " возникла ошибка SQL!";
                 }

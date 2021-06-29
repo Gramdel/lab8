@@ -68,7 +68,7 @@ public class Client {
             try {
                 SocketAddress address = new InetSocketAddress(hostname, port);
                 DatagramSocket socket = new DatagramSocket();
-                socket.setSoTimeout(1000);
+                socket.setSoTimeout(500);
                 DatagramPacket packet = new DatagramPacket(b, b.length, address);
                 socket.send(packet);
                 getLogger().log(Level.INFO, "Команда " + command.getClass().getSimpleName() + " успешно отправлена на сервер " + hostname + ":" + port + "!");

@@ -9,6 +9,7 @@ import java.util.Stack;
 public abstract class Interpreter {
     protected final HashMap<String, Command> commands = new HashMap<>();
     protected final Stack<String> history = new Stack<>();
+    protected String content;
 
     public Interpreter(User user) {
         commands.put("add", new Add(user));
@@ -43,4 +44,7 @@ public abstract class Interpreter {
         return commands;
     }
 
+    public String getContent() {
+        return content;
+    }
 }

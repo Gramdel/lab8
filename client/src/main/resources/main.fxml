@@ -36,7 +36,7 @@
                   <Font name="Consolas Bold" size="23.0" />
                </font>
             </Button>
-            <Label fx:id="chosenCommand" layoutX="38.1" layoutY="80.0" prefHeight="22.0" prefWidth="202.0" textFill="WHITE" />
+            <Label fx:id="commandMirrorLabel" layoutX="38.1" layoutY="80.0" prefHeight="22.0" prefWidth="202.0" textFill="WHITE" />
          </children>
       </AnchorPane>
         <Label layoutX="27.0" layoutY="21.0" prefHeight="54.0" prefWidth="193.0" text="PRODMAN" textFill="WHITE">
@@ -45,9 +45,9 @@
             </font>
         </Label>
       <Circle fx:id="languageCircle" fill="WHITE" layoutX="227.0" layoutY="48.0" radius="16.0" />
-        <AnchorPane fx:id="withArgsAnchorPane" layoutY="64.0" prefHeight="545.0" prefWidth="271.0" style="-fx-background-color: transparent;" visible="false">
+        <AnchorPane fx:id="commandsAnchorPane" layoutY="64.0" prefHeight="545.0" prefWidth="271.0" style="-fx-background-color: transparent;" visible="false">
             <children>
-                <Label fx:id="noArgsLabel" alignment="CENTER" layoutX="4.0" layoutY="10.2" prefHeight="36.0" prefWidth="262.0" style="-fx-background-color: transparent;" textFill="WHITE">
+                <Label fx:id="chosenCommandLabel" alignment="CENTER" layoutX="27.0" layoutY="10.0" prefHeight="36.0" prefWidth="215.0" style="-fx-background-color: transparent;" textFill="WHITE">
                     <font>
                         <Font name="Consolas Bold" size="23.0" />
                     </font>
@@ -149,6 +149,11 @@
                 </padding>
             </TextField>
                 <Button fx:id="proceedButton" layoutX="27.0" layoutY="508.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="215.0" styleClass="blue-button" text="ВЫПОЛНИТЬ" />
+            <Label fx:id="goBackLabel" alignment="CENTER" layoutX="7.0" layoutY="17.0" prefHeight="26.0" prefWidth="20.0" text="⏴" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
             </children>
         </AnchorPane>
       <Label fx:id="userLabel" layoutX="52.0" layoutY="625.0" prefHeight="26.0" prefWidth="117.0" textFill="WHITE">

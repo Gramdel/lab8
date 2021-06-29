@@ -43,14 +43,14 @@ public class AddIfMax extends Command {
             }
             product = Creator.createProduct(product, isInteractive);
             if (product == null) {
-                System.out.println("Команда add_if_max не выполнена!");
+                content = "Команда add_if_max не выполнена, т.к. не получилось создать продукт!";
                 return false;
             }
         } catch (JsonSyntaxException | NumberFormatException e) {
-            System.out.println("Ошибка в синтаксисе JSON-строки!");
+            content = "Ошибка в синтаксисе JSON-строки! "+e.getMessage();
             return false;
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            content = e.getMessage();
             return false;
         }
         product.setUser(user);
@@ -72,9 +72,10 @@ public class AddIfMax extends Command {
                         organizations.add(product.getManufacturer());
                     }
                     collection.add(product);
-                    return "Элемент успешно добавлен, т.к. его цена - наибольшая в коллекции!";
+                    //return "Элемент успешно добавлен, т.к. его цена - наибольшая в коллекции!";
+                    return "0";
                 } else {
-                    return "Несмотря на то, что цена элемента - наибольшая, он не был добавлен из-за ошибка SQL!";
+                    return "Несмотря на то, что цена элемента - наибольшая, он не был добавлен из-за ошибки SQL!";
                 }
             } else {
                 return "Элемент не добавлен, т.к. его цена - НЕ наибольшая в коллекции.";
@@ -90,7 +91,7 @@ public class AddIfMax extends Command {
                     organizations.add(product.getManufacturer());
                 }
                 collection.add(product);
-                return "Элемент добавлен в коллекцию вне зависимости от цены, потому что коллекция пуста!";
+                return "0";
             } else {
                 return "Несмотря на то, что цена элемента - наибольшая (коллекция пуста), он не был добавлен из-за ошибка SQL!";
             }

@@ -11,10 +11,14 @@ public enum UnitOfMeasure implements Serializable {
 
     public static UnitOfMeasure fromString(String s) {
         if (s != null) {
-            for (UnitOfMeasure unit : UnitOfMeasure.values()) {
-                if (s.equals(unit.toString())) {
-                    return unit;
+            if (!s.isEmpty()) {
+                for (UnitOfMeasure uom : UnitOfMeasure.values()) {
+                    if (s.equals(uom.toString())) {
+                        return uom;
+                    }
                 }
+            } else {
+                return null;
             }
         }
         throw new IllegalArgumentException();

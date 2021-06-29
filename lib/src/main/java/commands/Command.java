@@ -14,6 +14,8 @@ import java.util.LinkedHashSet;
 public abstract class Command implements Serializable {
     protected User user;
 
+    protected String content;
+
     public Command(User user) {
         this.user = user;
     }
@@ -27,4 +29,8 @@ public abstract class Command implements Serializable {
     public abstract String description();
 
     public abstract String syntax();
+
+    public String getContent() {
+        return content;
+    }
 }

@@ -30,9 +30,12 @@ public class RemoveById extends Command {
                 if (m.find()) {
                     id = Long.parseLong(m.group());
                 }
+                if (id <= 0) {
+                    throw new NumberFormatException();
+                }
             }
         } catch (NumberFormatException e) {
-            System.out.println("У команды remove_by_id должен быть 1 аргумент - положительное целое число!");
+            content = "У команды remove_by_id должен быть 1 аргумент - положительное целое число!";
             return false;
         }
         return true;

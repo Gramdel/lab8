@@ -17,16 +17,20 @@ public class Product implements Comparable<Product>, Serializable {
         return (p1.id < p2.id) ? -1 : 1;
     };
     public static Comparator<Product> byPriceComparator = (p1, p2) -> Float.compare(p1.price, p2.price);
-    private final String name; //Поле не может быть null, Строка не может быть пустой
-    private final Coordinates coordinates; //Поле не может быть null
-    private final float price; //Значение поля должно быть больше 0
-    private final String partNumber; //Значение этого поля должно быть уникальным, Поле не может быть null
-    private final Float manufactureCost; //Поле не может быть null
-    private final UnitOfMeasure unitOfMeasure; //Поле не может быть null
+    private String name; //Поле не может быть null, Строка не может быть пустой
+    private Coordinates coordinates; //Поле не может быть null
+    private float price; //Значение поля должно быть больше 0
+    private String partNumber; //Значение этого поля должно быть уникальным, Поле не может быть null
+    private Float manufactureCost; //Поле не может быть null
+    private UnitOfMeasure unitOfMeasure; //Поле не может быть null
     private User user;
     private Long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private java.time.ZonedDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
     private Organization manufacturer; //Поле может быть null
+
+    public Product() {
+        this.creationDate = ZonedDateTime.now();
+    }
 
     public Product(String name, Coordinates coordinates, float price, String partNumber, Float manufactureCost, UnitOfMeasure unitOfMeasure, Organization manufacturer) {
         this.name = name;
@@ -55,7 +59,7 @@ public class Product implements Comparable<Product>, Serializable {
                 "}";
     }
 
-    public String toStringForUpdate() {
+    public String toStringNoDate() {
         return "{" +
                 "\"id\" : " + id + ", " +
                 "\"name\" : \"" + name + "\", " +
@@ -64,7 +68,8 @@ public class Product implements Comparable<Product>, Serializable {
                 "\"partNumber\" : \"" + partNumber + "\", " +
                 "\"manufactureCost\" : " + manufactureCost + ", " +
                 "\"unitOfMeasure\" : \"" + unitOfMeasure + "\", " +
-                "\"manufacturer\" : " + manufacturer +
+                "\"manufacturer\" : " + manufacturer + "," +
+                "\"owner\" : \"" + user.getName() + "\"" +
                 "}";
     }
 
@@ -167,5 +172,29 @@ public class Product implements Comparable<Product>, Serializable {
 
     public String getManufacturerName() {
         return manufacturer.getName();
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCoordinates(Coordinates coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public void setManufactureCost(Float manufactureCost) {
+        this.manufactureCost = manufactureCost;
+    }
+
+    public void setPartNumber(String partNumber) {
+        this.partNumber = partNumber;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public void setUnitOfMeasure(UnitOfMeasure unitOfMeasure) {
+        this.unitOfMeasure = unitOfMeasure;
     }
 }

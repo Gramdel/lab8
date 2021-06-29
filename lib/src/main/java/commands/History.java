@@ -21,7 +21,7 @@ public class History extends Command {
     @Override
     public boolean prepare(String arg, boolean isInteractive, Interpreter interpreter) {
         if (!arg.matches("\\s*")) {
-            System.out.println("У команды history не может быть аргументов!");
+            content = "У команды history не может быть аргументов!";
             return false;
         }
         history = interpreter.getHistory();

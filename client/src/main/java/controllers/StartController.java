@@ -99,11 +99,15 @@ public class StartController extends Controller {
             }
         });
 
+        Tooltip.install(loginField, getTooltipWithDelay("Логин", 300));
+
         loginField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 passwordField.requestFocus();
             }
         });
+
+        Tooltip.install(passwordField, getTooltipWithDelay("Пароль", 300));
 
         passwordField.setOnKeyPressed(event -> {
             if (!proceedButton.isArmed()) {
@@ -160,8 +164,7 @@ public class StartController extends Controller {
                         try {
                             changeScene("main.fxml","PRODMAN: Управление коллекцией продуктов");
                         } catch (IOException e) {
-                            e.printStackTrace();
-                            showAlert(Alert.AlertType.ERROR, "Error", "Ошибка смены сцены", e.getMessage());
+                            showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка смены сцены", e.getMessage());
                         }
                         break;
                     case 1:
@@ -179,7 +182,7 @@ public class StartController extends Controller {
                 }
             } else {
                 String header = mode == 0 ? "Login error" : "Registration error";
-                showAlert(Alert.AlertType.ERROR, "Error", header, Client.getContent());
+                showAlert(Alert.AlertType.ERROR, "ERROR", header, Client.getContent());
             }
         }
         getScene().setCursor(Cursor.DEFAULT);

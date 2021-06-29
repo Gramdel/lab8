@@ -91,4 +91,8 @@ public class Main extends Application {
     public static InterpreterForClient getInterpreter() {
         return interpreter;
     }
+
+    public static Thread getThread() {
+        return Thread.currentThread();
+    }
 }
