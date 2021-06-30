@@ -114,7 +114,6 @@ public class StartController extends Controller {
                 proceedButton.setStyle("-fx-background-color: #1600D9");
             }
             if (event.getCode() == KeyCode.ENTER) {
-                proceedButton.arm();
                 proceedButton.fire();
             }
         });
@@ -125,6 +124,7 @@ public class StartController extends Controller {
             }
         });
 
+        proceedButton.arm();
         proceedButton.setOnMouseEntered(event -> {
             getScene().setCursor(Cursor.HAND);
             proceedButton.setStyle("-fx-background-color: #4E3BEC");

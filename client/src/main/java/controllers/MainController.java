@@ -14,10 +14,11 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -166,6 +167,11 @@ public class MainController extends Controller {
     private final SynchronizerService synchronizer = new SynchronizerService();
 
     private AlertType alertType;
+    private String title;
+    private String header;
+    private String content;
+    private int errCount;
+    private boolean collectionIsEmpty;
 
     @FXML
     void initialize() {
@@ -298,18 +304,24 @@ public class MainController extends Controller {
         });
 
         proceedButton.setOnMouseEntered(event -> {
+            System.out.println(proceedButton.isArmed());
             getScene().setCursor(Cursor.HAND);
             proceedButton.setStyle("-fx-background-color: #4E3BEC");
         });
 
         proceedButton.setOnMouseExited(event -> {
+            if (!proceedButton.isDefaultButton()) {
+                proceedButton.setStyle("-fx-background-color: #1600D9");
+            }
             getScene().setCursor(Cursor.DEFAULT);
-            proceedButton.setStyle("-fx-background-color: #1600D9");
         });
 
         proceedButton.setOnAction(event -> {
             proceedButton.setStyle("-fx-background-color: #3629A3");
+            proceedButton.setDefaultButton(true);
             proceed();
+            proceedButton.setDefaultButton(false);
+            proceedButton.setStyle("-fx-background-color: #1600D9");
             getScene().setCursor(Cursor.DEFAULT);
         });
 
@@ -334,18 +346,94 @@ public class MainController extends Controller {
             }
         });
 
-        idField.setOnKeyPressed(event -> idField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;"));
-        nameField.setOnKeyPressed(event -> nameField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;"));
-        xField.setOnKeyPressed(event -> xField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;"));
-        yField.setOnKeyPressed(event -> yField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;"));
-        priceField.setOnKeyPressed(event -> priceField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;"));
-        partNumField.setOnKeyPressed(event -> partNumField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;"));
-        manCostField.setOnKeyPressed(event -> manCostField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;"));
-        uomField.setOnKeyPressed(event -> uomField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;"));
-        manNameField.setOnKeyPressed(event -> manNameField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;"));
-        turnoverField.setOnKeyPressed(event -> turnoverField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;"));
-        empCountField.setOnKeyPressed(event -> empCountField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;"));
-        typeField.setOnKeyPressed(event -> typeField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;"));
+        idField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                if (nameField.isVisible()) {
+                    nameField.requestFocus();
+                } else {
+                    proceedButton.fire();
+                }
+            } else {
+                idField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+            }
+        });
+        nameField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                xField.requestFocus();
+            } else {
+                nameField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+            }
+        });
+        xField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                yField.requestFocus();
+            } else {
+                xField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+            }
+        });
+        yField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                priceField.requestFocus();
+            } else {
+                yField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+            }
+        });
+        priceField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                partNumField.requestFocus();
+            } else {
+                priceField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+            }
+        });
+        partNumField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                manCostField.requestFocus();
+            } else {
+                partNumField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+            }
+        });
+        manCostField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                uomField.requestFocus();
+            } else {
+                manCostField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+            }
+        });
+        uomField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                manNameField.requestFocus();
+            } else {
+                uomField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+            }
+        });
+        manNameField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                turnoverField.requestFocus();
+            } else {
+                manNameField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+            }
+        });
+        turnoverField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                empCountField.requestFocus();
+            } else {
+                turnoverField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+            }
+        });
+        empCountField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                typeField.requestFocus();
+            } else {
+                empCountField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+            }
+        });
+        typeField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                proceedButton.fire();
+            } else {
+                typeField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+            }
+        });
 
         Tooltip.install(goBackLabel, getTooltipWithDelay("Обратно", 10));
 
@@ -367,18 +455,27 @@ public class MainController extends Controller {
             mainAnchorPane.setVisible(true);
         });
 
-        synchronizer.setOnCancelled(event -> {
-            new Alert(Alert.AlertType.ERROR).show();
+        errCount = 0;
+        collectionIsEmpty = false;
+
+        synchronizer.setOnSucceeded(event -> {
+            if (errCount < 10) {
+                showAlert(alertType, title, header, content);
+                synchronizer.reset();
+                synchronizer.start();
+            } else {
+                showAlert(AlertType.ERROR, "ERROR", "Программа завершает сессию", "Из-за многочисленных ошибок связи с сервером совершён выход из учётной записи. Повторите позже.");
+                try {
+                    changeScene("start.fxml", "PRODMAN: Авторизация");
+                } catch (IOException e) {
+                    showAlert(AlertType.ERROR, "ERROR", "Ошибка смены сцены", e.getMessage());
+                }
+            }
         });
-        synchronizer.setOnSucceeded(event -> new Alert(alertType).show());
         synchronizer.start();
     }
 
     private class SynchronizerService extends Service<Void> {
-        private String title;
-        private String header;
-        private String content;
-
         @Override
         protected Task<Void> createTask() {
             return new Task<Void>() {
@@ -386,7 +483,6 @@ public class MainController extends Controller {
                 protected Void call() {
                     long count = 0;
                     while (true) {
-                        System.out.println(count);
                         if (fillTable(count++) == count) {
                             break;
                         }
@@ -412,6 +508,7 @@ public class MainController extends Controller {
         if (jsonString != null) {
             if (!jsonString.equals("0")) {
                 try {
+                    int prevErrCount = errCount;
                     JSONArray jsonArray = (JSONArray) new JSONParser().parse("[" + jsonString + "]");
                     jsonArray.forEach(element -> {
                         try {
@@ -422,24 +519,39 @@ public class MainController extends Controller {
                             product.setUser(new User(o.get("owner").toString()));
                             observableList.add(product);
                         } catch (JsonSyntaxException e) {
-                            //showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка при загрузке элементов коллекции", e.getMessage());
+                            errCount++;
+                            alertType = Alert.AlertType.ERROR;
+                            title = "ERROR";
+                            header = "Ошибка при загрузке элементов коллекции";
+                            content = e.getMessage();
                         }
                     });
+                    if (errCount > prevErrCount) {
+                        return count + 1;
+                    }
                 } catch (ParseException e) {
-                    //showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка при загрузке элементов коллекции", e.getMessage());
+                    errCount++;
+                    alertType = Alert.AlertType.ERROR;
+                    title = "ERROR";
+                    header = "Ошибка при загрузке элементов коллекции";
+                    content = e.getMessage();
+                    return count + 1;
                 }
-            } else if (count == 0) {
-                //showAlert(Alert.AlertType.INFORMATION, "INFO", "Коллекция пуста!", "Не загружено ни одного элемента.");
+            } else if ((count == 0) && (!collectionIsEmpty)) {
+                collectionIsEmpty = true;
+                alertType = AlertType.INFORMATION;
+                title = "INFO";
+                header = "Коллекция пуста!";
+                content = "Не загружено ни одного элемента.";
+                return count + 1;
             }
         } else {
+            errCount++;
             alertType = Alert.AlertType.ERROR;
-            //title = title;
-            //header = header;
-            //content = content;
-            return count+1;
-            //String content = Client.getContent();
-            //synchronizer.stop(Alert.AlertType.ERROR, "ERROR", "Ошибка при загрузке элементов коллекции", content);
-            //showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка при загрузке элементов коллекции", Client.getContent());
+            title = "ERROR";
+            header = "Ошибка при загрузке элементов коллекции";
+            content = Client.getContent();
+            return count + 1;
         }
 
         tableOfProducts.getItems().clear();
@@ -535,11 +647,12 @@ public class MainController extends Controller {
                     showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка при отправке/получении команды", Client.getContent());
                 } else if (result.isEmpty()) {
                     showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка при проверке аргументов команды", getInterpreter().getContent());
+                    idField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
                 } else {
                     showAlert(Alert.AlertType.INFORMATION, "INFO", "Команда " + commandMirrorLabel.getText() + " вернула следующий результат:", result);
+                    commandsAnchorPane.setVisible(false);
+                    mainAnchorPane.setVisible(true);
                 }
-                commandsAnchorPane.setVisible(false);
-                mainAnchorPane.setVisible(true);
                 break;
             case 1:
             case 2:
