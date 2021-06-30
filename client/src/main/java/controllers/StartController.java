@@ -55,6 +55,8 @@ public class StartController extends Controller {
                 proceedButton.setText("ВХОД");
                 errorLabel.setText("");
                 getScene().setCursor(Cursor.DEFAULT);
+                loginField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+                passwordField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
             }
         });
 
@@ -96,6 +98,8 @@ public class StartController extends Controller {
                 proceedButton.setText("РЕГИСТРАЦИЯ");
                 errorLabel.setText("");
                 getScene().setCursor(Cursor.DEFAULT);
+                loginField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+                passwordField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
             }
         });
 
@@ -104,6 +108,8 @@ public class StartController extends Controller {
         loginField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 passwordField.requestFocus();
+            } else {
+                loginField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
             }
         });
 
@@ -115,6 +121,8 @@ public class StartController extends Controller {
             }
             if (event.getCode() == KeyCode.ENTER) {
                 proceedButton.fire();
+            } else {
+                passwordField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
             }
         });
 
@@ -146,13 +154,24 @@ public class StartController extends Controller {
         getScene().setCursor(Cursor.WAIT);
         String name = loginField.getText().trim();
         String password = passwordField.getText().trim();
+        boolean noErrors = true;
         if (name.isEmpty()) {
             errorLabel.setText("Имя пользователя не может\nбыть пустым!");
+            loginField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
+            noErrors = false;
         } else if (name.length() > 20) {
             errorLabel.setText("Имя пользователя не может\nбыть длиннее 20 символов!");
-        } else if (password.isEmpty()) {
+            loginField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
+            noErrors = false;
+        }
+
+        if (password.isEmpty()) {
             errorLabel.setText("Пароль не может быть пустым!");
-        } else {
+            passwordField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
+            noErrors = false;
+        }
+
+        if (noErrors) {
             User user = new User(name, password);
             user.setCheckOrAdd(mode == 0);
             user = Client.sendAndReceiveUser(user);
@@ -162,27 +181,31 @@ public class StartController extends Controller {
                         Main.setUser(user);
                         Main.setInterpreter(new InterpreterForClient(user));
                         try {
-                            changeScene("main.fxml","PRODMAN: Управление коллекцией продуктов");
+                            changeScene("main.fxml", "PRODMAN: Управление коллекцией продуктов");
                         } catch (IOException e) {
                             showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка смены сцены", e.getMessage());
                         }
                         break;
                     case 1:
                         errorLabel.setText("Неправильный пароль!");
+                        passwordField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
                         break;
                     case 2:
                         errorLabel.setText("Такого пользователя не существует!");
+                        loginField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
                         break;
                     case 3:
                         errorLabel.setText("Сервер не смог подключиться к базе данных!\nПопробуйте ещё раз.");
                         break;
                     case 4:
                         errorLabel.setText("Такой пользователь\nуже зарегистрирован!");
+                        loginField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
                         break;
                 }
             } else {
                 String header = mode == 0 ? "Login error" : "Registration error";
                 showAlert(Alert.AlertType.ERROR, "ERROR", header, Client.getContent());
+                proceedButton.setStyle("-fx-background-color: #1600D9");
             }
         }
         getScene().setCursor(Cursor.DEFAULT);

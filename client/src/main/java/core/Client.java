@@ -4,8 +4,6 @@ import commands.Command;
 
 import java.io.*;
 import java.net.*;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 import java.util.logging.Level;
 
 import static core.Main.getLogger;
@@ -13,48 +11,11 @@ import static core.Main.getLogger;
 public class Client {
     private static String hostname;
     private static int port;
-    private static User user;
     private static String content;
 
     public static void setProperties(String hostname, int port) {
         Client.hostname = hostname;
         Client.port = port;
-    }
-
-    public static void settUser() {
-        System.out.println("Вас приветствует программа-клиент для управления коллекцией продуктов!");
-        Scanner in = new Scanner(System.in);
-        while (true) {
-            try {
-                System.out.println("Для входа введите 1, для регистрации введите 2, для выхода введите 3 (без пробелов):");
-                String check = in.nextLine();
-                if (!check.equals("1") & !check.equals("2") & !check.equals("3")) {
-                    throw new InputMismatchException();
-                } else if (check.equals("3")) {
-                    System.out.println("Программа завершает работу.");
-                    System.exit(1);
-                } else {
-                    System.out.println("Введите имя пользователя:");
-                    String name = in.nextLine();
-                    System.out.println("Введите пароль: ");
-                    String password = in.nextLine();
-                    User user = new User(name, password);
-                    user.setCheckOrAdd(check.equals("1"));
-                    user = sendAndReceiveUser(user);
-                    if (user != null) {
-                        Client.user = user;
-                        if (check.equals("1")) {
-                            System.out.print("Вы успешно вошли! ");
-                        } else {
-                            System.out.print("Вы успешно зарегистрировались! ");
-                        }
-                        break;
-                    }
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Некорректный ввод!");
-            }
-        }
     }
 
     public static synchronized String sendCommandAndReceiveResult(Command command) {
@@ -148,14 +109,6 @@ public class Client {
             getLogger().log(Level.WARNING, "Ошибка сериализации пользователя!");
             return null;
         }
-    }
-
-    public static void setUser(User user) {
-        Client.user = user;
-    }
-
-    public static User getUser() {
-        return user;
     }
 
     public static String getContent() {

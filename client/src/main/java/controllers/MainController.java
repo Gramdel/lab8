@@ -225,7 +225,6 @@ public class MainController extends Controller {
 
         commandButton.setOnAction(event -> {
             if (!commandMirrorLabel.getText().isEmpty()) {
-                underlineCommandButton.setStroke(Color.web("#1600d9"));
                 prepareCommand();
                 getScene().setCursor(Cursor.DEFAULT);
             }
@@ -233,6 +232,7 @@ public class MainController extends Controller {
 
         commandButton.setOnMouseEntered(event -> {
             if (!commandMirrorLabel.getText().isEmpty()) {
+                underlineCommandButton.setStroke(Color.web("#5454FF"));
                 getScene().setCursor(Cursor.HAND);
             }
         });
@@ -256,6 +256,8 @@ public class MainController extends Controller {
             });
             MenuItem itemRemove = new MenuItem("Удалить");
             itemRemove.setOnAction(event -> {
+                commandChoiceBox.setValue("remove_by_id");
+                commandMirrorLabel.setText("remove_by_id");
                 String result = getInterpreter().fromString("remove_by_id", row.getItem().getId().toString());
                 if (result == null) {
                     showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка при отправке/получении команды", Client.getContent());
@@ -304,7 +306,6 @@ public class MainController extends Controller {
         });
 
         proceedButton.setOnMouseEntered(event -> {
-            System.out.println(proceedButton.isArmed());
             getScene().setCursor(Cursor.HAND);
             proceedButton.setStyle("-fx-background-color: #4E3BEC");
         });
@@ -354,84 +355,84 @@ public class MainController extends Controller {
                     proceedButton.fire();
                 }
             } else {
-                idField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+                idField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
             }
         });
         nameField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 xField.requestFocus();
             } else {
-                nameField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+                nameField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
             }
         });
         xField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 yField.requestFocus();
             } else {
-                xField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+                xField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
             }
         });
         yField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 priceField.requestFocus();
             } else {
-                yField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+                yField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
             }
         });
         priceField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 partNumField.requestFocus();
             } else {
-                priceField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+                priceField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
             }
         });
         partNumField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 manCostField.requestFocus();
             } else {
-                partNumField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+                partNumField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
             }
         });
         manCostField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 uomField.requestFocus();
             } else {
-                manCostField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+                manCostField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
             }
         });
         uomField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 manNameField.requestFocus();
             } else {
-                uomField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+                uomField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
             }
         });
         manNameField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 turnoverField.requestFocus();
             } else {
-                manNameField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+                manNameField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
             }
         });
         turnoverField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 empCountField.requestFocus();
             } else {
-                turnoverField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+                turnoverField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
             }
         });
         empCountField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 typeField.requestFocus();
             } else {
-                empCountField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+                empCountField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
             }
         });
         typeField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 proceedButton.fire();
             } else {
-                typeField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+                typeField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
             }
         });
 
@@ -439,7 +440,7 @@ public class MainController extends Controller {
 
         goBackLabel.setOnMouseEntered(event -> {
             getScene().setCursor(Cursor.HAND);
-            goBackLabel.setTextFill(Color.web("#4E3BEC"));
+            goBackLabel.setTextFill(Color.web("#5454FF"));
         });
 
         goBackLabel.setOnMouseExited(event -> {
@@ -448,7 +449,6 @@ public class MainController extends Controller {
         });
 
         goBackLabel.setOnMouseClicked(event -> {
-            goBackLabel.setTextFill(Color.web("#3629A3"));
             getScene().setCursor(Cursor.DEFAULT);
             commandsAnchorPane.setVisible(false);
             resetFields();
@@ -647,7 +647,7 @@ public class MainController extends Controller {
                     showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка при отправке/получении команды", Client.getContent());
                 } else if (result.isEmpty()) {
                     showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка при проверке аргументов команды", getInterpreter().getContent());
-                    idField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
+                    idField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                 } else {
                     showAlert(Alert.AlertType.INFORMATION, "INFO", "Команда " + commandMirrorLabel.getText() + " вернула следующий результат:", result);
                     commandsAnchorPane.setVisible(false);
@@ -665,27 +665,27 @@ public class MainController extends Controller {
                             throw new NumberFormatException();
                         }
                     } catch (NumberFormatException e) {
-                        idField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
+                        idField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                         errors.push("Неправильный ввод id! Требуемый формат: целое положительное число.\n");
                     }
                 }
                 String name = nameField.getText();
                 if (name == null || name.matches("\\s*")) {
-                    nameField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
+                    nameField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                     errors.push("Неправильный ввод названия продукта! Оно не может быть пустой строкой.\n");
                 }
                 Double x = null;
                 try {
                     x = Double.parseDouble(xField.getText());
                 } catch (NumberFormatException e) {
-                    xField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
+                    xField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                     errors.push("Неправильный ввод координаты x! Требуемый формат: дробное число.\n");
                 }
                 Long y = null;
                 try {
                     y = Long.parseLong(yField.getText());
                 } catch (NumberFormatException e) {
-                    yField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
+                    yField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                     errors.push("Неправильный ввод координаты y! Требуемый формат: целое число.\n");
                 }
                 float price = -1;
@@ -695,12 +695,12 @@ public class MainController extends Controller {
                         throw new NumberFormatException();
                     }
                 } catch (NumberFormatException e) {
-                    priceField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
+                    priceField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                     errors.push("Неправильный ввод цены продукта! Требуемый формат: положительное дробное число.\n");
                 }
                 String partNumber = partNumField.getText();
                 if (partNumber == null || !partNumber.matches("#\\d{6}")) {
-                    partNumField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
+                    partNumField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                     errors.push("Неправильный ввод кода производителя! Требуемый формат: #xxxxxx, где x - цифры.\n");
                 }
                 float manufactureCost = -1;
@@ -710,7 +710,7 @@ public class MainController extends Controller {
                         throw new NumberFormatException();
                     }
                 } catch (NumberFormatException e) {
-                    manCostField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
+                    manCostField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                     errors.push("Неправильный ввод цены производства продукта! Требуемый формат: положительное дробное число.\n");
                 }
                 UnitOfMeasure unitOfMeasure = null;
@@ -720,12 +720,12 @@ public class MainController extends Controller {
                         throw new IllegalArgumentException();
                     }
                 } catch (IllegalArgumentException e) {
-                    uomField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
+                    uomField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                     errors.push("Неправильный ввод единиц измерения! Возможные варианты ввода: " + UnitOfMeasure.valueList() + ".\n");
                 }
                 String manufacturerName = manNameField.getText();
                 if (manufacturerName == null || manufacturerName.matches("\\s*")) {
-                    manNameField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
+                    manNameField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                     errors.push("Неправильный ввод названия компании-производителя! Оно не может быть пустой строкой.\n");
                 }
                 Long annualTurnover = null;
@@ -737,7 +737,7 @@ public class MainController extends Controller {
                         }
                     }
                 } catch (NumberFormatException e) {
-                    turnoverField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
+                    turnoverField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                     errors.push("Неправильный ввод ежегодного оборота компании-производителя! Требуемый формат: пустая строка или целое положительное число.\n");
                 }
                 Long employeesCount = null;
@@ -749,7 +749,7 @@ public class MainController extends Controller {
                         }
                     }
                 } catch (NumberFormatException e) {
-                    empCountField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
+                    empCountField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                     errors.push("Неправильный ввод количества сотрудников компании-производителя! Требуемый формат: пустая строка или целое положительное число.\n");
                 }
                 OrganizationType type = null;
@@ -758,7 +758,7 @@ public class MainController extends Controller {
                         type = OrganizationType.fromString(typeField.getText());
                     }
                 } catch (IllegalArgumentException e) {
-                    typeField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
+                    typeField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                     errors.push("Неправильный ввод типа компании-производителя! Возможные варианты ввода: пустая строка, " + OrganizationType.valueList() + ".\n");
                 }
                 if (errors.isEmpty()) {
@@ -801,18 +801,18 @@ public class MainController extends Controller {
         empCountField.clear();
         typeField.clear();
 
-        idField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
-        nameField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
-        xField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
-        yField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
-        priceField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
-        partNumField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
-        manCostField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
-        uomField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
-        manNameField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
-        turnoverField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
-        empCountField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
-        typeField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
+        idField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
+        nameField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
+        xField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
+        yField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
+        priceField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
+        partNumField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
+        manCostField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
+        uomField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
+        manNameField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
+        turnoverField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
+        empCountField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
+        typeField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
 
         Tooltip.install(idField, getTooltipWithDelay("id", 10));
         Tooltip.install(nameField, getTooltipWithDelay("name", 10));

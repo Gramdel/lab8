@@ -8,6 +8,7 @@ import core.User;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -30,38 +31,49 @@ public class Clear extends Command {
         if (collection.size() > 0) {
             if (!user.getName().equals("admin")) {
                 if (collection.stream().anyMatch(x -> x.getUser().getName().equals(user.getName()))) {
-                    final boolean[] noErrors = {true};
-                    collection.stream().filter(x -> x.getUser().getName().equals(user.getName())).forEach(x -> {
-                        if (dbUnit.removeProductFromDB(x)) {
-                            collection.remove(x);
-                            if (collection.stream().filter(y -> y.getManufacturer().equals(x.getManufacturer())).count() == 1) {
-                                organizations.remove(x.getManufacturer());
+                    boolean noPermissionErrors = true;
+                    boolean noSqlErrors = true;
+                    for (Iterator<Product> iter = collection.iterator(); iter.hasNext(); ) {
+                        Product product = iter.next();
+                        if (product.getUser().getName().equals(user.getName())) {
+                            if (dbUnit.removeProductFromDB(product)) {
+                                if (collection.stream().filter(y -> y.getManufacturer().equals(product.getManufacturer())).count() == 1) {
+                                    organizations.remove(product.getManufacturer());
+                                }
+                                iter.remove();
+                            } else {
+                                noSqlErrors = false;
                             }
                         } else {
-                            noErrors[0] =false;
+                            noPermissionErrors = false;
                         }
-                    });
-                    if (noErrors[0]) {
-                        return "Коллекция очищена.";
-                    } else {
+                    }
+                    if (!noPermissionErrors && !noSqlErrors) {
+                        return "Не все элементы были удалены, т.к. возникли ошибки SQL и вы не являетесь владельцем некоторых элементов!";
+                    } else if (noPermissionErrors && !noSqlErrors) {
                         return "Не все элементы были удалены, т.к. возникли ошибки SQL!";
+                    } else if (!noPermissionErrors) {
+                        return "Не все элементы были удалены, т.к. вы не являетесь владельцем некоторых элементов!";
+                    } else {
+                        return "Коллекция очищена!";
                     }
                 } else {
                     return "Вы не являетесь владельцем ни одного из элементов, поэтому коллекция не очищена!";
                 }
             } else {
-                final boolean[] noErrors = {true};
-                collection.stream().forEach(x -> {
-                    if (dbUnit.removeProductFromDB(x)) {
-                        collection.remove(x);
-                        if (collection.stream().filter(y -> y.getManufacturer().equals(x.getManufacturer())).count() == 1) {
-                            organizations.remove(x.getManufacturer());
+                boolean noErrors = true;
+                for (Iterator<Product> iter = collection.iterator(); iter.hasNext(); ) {
+                    Product product = iter.next();
+                    if (dbUnit.removeProductFromDB(product)) {
+                        if (collection.stream().filter(y -> y.getManufacturer().equals(product.getManufacturer())).count() == 1) {
+                            organizations.remove(product.getManufacturer());
                         }
+                        iter.remove();
                     } else {
-                        noErrors[0] = false;
+                        noErrors = false;
                     }
-                });
-                if (noErrors[0]) {
+                }
+                if (noErrors) {
                     return "Коллекция очищена.";
                 } else {
                     return "Не все элементы были удалены, т.к. возникли ошибки SQL!";

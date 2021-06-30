@@ -35,7 +35,7 @@ public class InterpreterForClient extends Interpreter {
                         Client.sendCommandAndReceiveResult(command);
                     }
                 } else {
-                    System.out.println("Такой команды не существует! Список команд: help");
+                    System.out.println("Команды " + com + " не существует! Список команд: help");
                 }
             }
         }

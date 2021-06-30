@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="665.0" prefWidth="1530.0" style="-fx-background-color: #1F2850;" stylesheets="styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainController">
+<AnchorPane prefHeight="665.0" prefWidth="1530.0" style="-fx-background-image: url('/images/bg2.jpg'); -fx-background-position: left; -fx-background-color: #1F2850;" stylesheets="styles.css" xmlns="http://javafx.com/javafx/8.0.261" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainController">
     <children>
           <TableView fx:id="tableOfProducts" layoutX="271.0" prefHeight="665.0" prefWidth="1259.0">
               <columns>
@@ -30,13 +37,13 @@
       <Line fx:id="underlineCommandButton" endX="110.0" layoutX="130.0" layoutY="114.0" startX="-100.0" stroke="WHITE" strokeWidth="3.0" />
       <AnchorPane fx:id="mainAnchorPane" layoutY="64.0" prefHeight="546.0" prefWidth="271.0" style="-fx-background-color: transparent;">
          <children>
-            <ChoiceBox fx:id="commandChoiceBox" layoutX="27.0" layoutY="76.0" prefHeight="31.0" prefWidth="215.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-text-fill: white;" styleClass="command-choice-box" />
+            <ChoiceBox fx:id="commandChoiceBox" layoutX="27.0" layoutY="64.0" prefHeight="31.0" prefWidth="215.0" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-border-color: white; -fx-text-fill: white;" styleClass="command-choice-box" />
             <Button fx:id="commandButton" layoutX="4.0" layoutY="7.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="262.0" style="-fx-background-color: transparent;" text="Выполнить команду" textFill="WHITE">
                <font>
                   <Font name="Consolas Bold" size="23.0" />
                </font>
             </Button>
-            <Label fx:id="commandMirrorLabel" layoutX="38.1" layoutY="80.0" prefHeight="22.0" prefWidth="202.0" textFill="WHITE" />
+            <Label fx:id="commandMirrorLabel" layoutX="38.1" layoutY="68.0" prefHeight="22.0" prefWidth="202.0" textFill="WHITE" />
          </children>
       </AnchorPane>
         <Label layoutX="27.0" layoutY="21.0" prefHeight="54.0" prefWidth="193.0" text="PRODMAN" textFill="WHITE">
@@ -52,7 +59,7 @@
                         <Font name="Consolas Bold" size="23.0" />
                     </font>
                 </Label>
-            <TextField fx:id="idField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="64.0" prefHeight="10.0" prefWidth="215.0" promptText="id" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;">
+            <TextField fx:id="idField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="64.0" prefHeight="10.0" prefWidth="215.0" promptText="id" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;">
                <font>
                   <Font name="Consolas Bold" size="20.0" />
                </font>
@@ -60,7 +67,7 @@
                   <Insets bottom="1.0" left="2.0" right="1.0" top="1.0" />
                </padding>
             </TextField>
-            <TextField fx:id="nameField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="101.0" prefHeight="10.0" prefWidth="215.0" promptText="name" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;">
+            <TextField fx:id="nameField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="101.0" prefHeight="10.0" prefWidth="215.0" promptText="name" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;">
                 <font>
                     <Font name="Consolas Bold" size="20.0" />
                 </font>
@@ -68,7 +75,7 @@
                     <Insets bottom="1.0" left="2.0" right="1.0" top="1.0" />
                 </padding>
             </TextField>
-			<TextField alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="138.0" prefHeight="10.0" prefWidth="215.0" promptText="x" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;" fx:id="xField">
+			<TextField alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="138.0" prefHeight="10.0" prefWidth="215.0" promptText="x" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;" fx:id="xField">
                 <font>
                     <Font name="Consolas Bold" size="20.0" />
                 </font>
@@ -76,7 +83,7 @@
                     <Insets bottom="1.0" left="2.0" right="1.0" top="1.0" />
                 </padding>
             </TextField>
-			<TextField fx:id="yField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="175.0" prefHeight="10.0" prefWidth="215.0" promptText="y" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;">
+			<TextField fx:id="yField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="175.0" prefHeight="10.0" prefWidth="215.0" promptText="y" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;">
                 <font>
                     <Font name="Consolas Bold" size="20.0" />
                 </font>
@@ -84,7 +91,7 @@
                     <Insets bottom="1.0" left="2.0" right="1.0" top="1.0" />
                 </padding>
             </TextField>
-			<TextField fx:id="priceField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="212.0" prefHeight="10.0" prefWidth="215.0" promptText="price" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;">
+			<TextField fx:id="priceField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="212.0" prefHeight="10.0" prefWidth="215.0" promptText="price" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;">
                 <font>
                     <Font name="Consolas Bold" size="20.0" />
                 </font>
@@ -92,7 +99,7 @@
                     <Insets bottom="1.0" left="2.0" right="1.0" top="1.0" />
                 </padding>
             </TextField>
-			<TextField fx:id="partNumField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="249.0" prefHeight="10.0" prefWidth="215.0" promptText="partNum" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;">
+			<TextField fx:id="partNumField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="249.0" prefHeight="10.0" prefWidth="215.0" promptText="partNum" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;">
                 <font>
                     <Font name="Consolas Bold" size="20.0" />
                 </font>
@@ -100,7 +107,7 @@
                     <Insets bottom="1.0" left="2.0" right="1.0" top="1.0" />
                 </padding>
             </TextField>
-			<TextField fx:id="manCostField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="286.0" prefHeight="10.0" prefWidth="215.0" promptText="manCost" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;">
+			<TextField fx:id="manCostField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="286.0" prefHeight="10.0" prefWidth="215.0" promptText="manCost" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;">
                 <font>
                     <Font name="Consolas Bold" size="20.0" />
                 </font>
@@ -108,7 +115,7 @@
                     <Insets bottom="1.0" left="2.0" right="1.0" top="1.0" />
                 </padding>
             </TextField>
-			<TextField fx:id="uomField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="323.0" prefHeight="10.0" prefWidth="215.0" promptText="UOM" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;">
+			<TextField fx:id="uomField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="323.0" prefHeight="10.0" prefWidth="215.0" promptText="UOM" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;">
                 <font>
                     <Font name="Consolas Bold" size="20.0" />
                 </font>
@@ -116,7 +123,7 @@
                     <Insets bottom="1.0" left="2.0" right="1.0" top="1.0" />
                 </padding>
             </TextField>
-			<TextField fx:id="manNameField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="360.0" prefHeight="10.0" prefWidth="215.0" promptText="manName" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;">
+			<TextField fx:id="manNameField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="360.0" prefHeight="10.0" prefWidth="215.0" promptText="manName" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;">
                 <font>
                     <Font name="Consolas Bold" size="20.0" />
                 </font>
@@ -124,7 +131,7 @@
                     <Insets bottom="1.0" left="2.0" right="1.0" top="1.0" />
                 </padding>
             </TextField>
-			<TextField fx:id="turnoverField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="397.0" prefHeight="10.0" prefWidth="215.0" promptText="turnover" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;">
+			<TextField fx:id="turnoverField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="397.0" prefHeight="10.0" prefWidth="215.0" promptText="turnover" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;">
                 <font>
                     <Font name="Consolas Bold" size="20.0" />
                 </font>
@@ -132,7 +139,7 @@
                     <Insets bottom="1.0" left="2.0" right="1.0" top="1.0" />
                 </padding>
             </TextField>
-			<TextField fx:id="empCountField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="434.0" prefHeight="10.0" prefWidth="215.0" promptText="empCount" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;">
+			<TextField fx:id="empCountField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="434.0" prefHeight="10.0" prefWidth="215.0" promptText="empCount" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;">
                 <font>
                     <Font name="Consolas Bold" size="20.0" />
                 </font>
@@ -140,7 +147,7 @@
                     <Insets bottom="1.0" left="2.0" right="1.0" top="1.0" />
                 </padding>
             </TextField>
-			<TextField fx:id="typeField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="471.0" prefHeight="10.0" prefWidth="215.0" promptText="type" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;">
+			<TextField fx:id="typeField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="471.0" prefHeight="10.0" prefWidth="215.0" promptText="type" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;">
                 <font>
                     <Font name="Consolas Bold" size="20.0" />
                 </font>
