@@ -26,9 +26,11 @@ import javafx.scene.shape.Line;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -51,6 +53,21 @@ public class MainController extends Controller {
 
     @FXML
     public Label goBackLabel;
+
+    @FXML
+    public Line underlineFilterCommand;
+
+    @FXML
+    public ChoiceBox<String> filterChoiceBox;
+
+    @FXML
+    public Button filterButton;
+
+    @FXML
+    public Label filterMirrorLabel;
+
+    @FXML
+    public TextField filterField;
 
     @FXML
     private TableView<Product> tableOfProducts;
@@ -172,6 +189,8 @@ public class MainController extends Controller {
     private String content;
     private int errCount;
     private boolean collectionIsEmpty;
+    private boolean filterIsSet;
+    private String filterOperator;
 
     @FXML
     void initialize() {
@@ -217,7 +236,10 @@ public class MainController extends Controller {
 
         Tooltip.install(commandChoiceBox, getTooltipWithDelay("Выбрать команду", 10));
 
-        commandChoiceBox.setOnAction(event -> commandMirrorLabel.setText(commandChoiceBox.getValue()));
+        commandChoiceBox.setOnAction(event -> {
+            commandMirrorLabel.setText(commandChoiceBox.getValue());
+            commandChoiceBox.requestFocus();
+        });
 
         commandChoiceBox.setOnMouseEntered(event -> getScene().setCursor(Cursor.HAND));
 
@@ -241,6 +263,89 @@ public class MainController extends Controller {
             if (!commandMirrorLabel.getText().isEmpty()) {
                 underlineCommandButton.setStroke(Color.web("white"));
                 getScene().setCursor(Cursor.DEFAULT);
+            }
+        });
+
+        filterIsSet = false;
+        ObservableList<String> fields = FXCollections.observableArrayList();
+        fields.add("");
+        fields.add("id");
+        fields.add("name");
+        fields.add("x");
+        fields.add("y");
+        fields.add("price");
+        fields.add("partNumber");
+        fields.add("manufactureCost");
+        fields.add("unitOfMeasure");
+        fields.add("manufacturerName");
+        fields.add("annualTurnover");
+        fields.add("employeesCount");
+        fields.add("type");
+        fields.add("owner");
+        filterChoiceBox.setItems(fields);
+
+        Tooltip.install(filterMirrorLabel, getTooltipWithDelay("Выбрать поле", 10));
+
+        filterMirrorLabel.setOnMouseClicked(event -> filterChoiceBox.show());
+
+        filterMirrorLabel.setOnMouseEntered(event -> getScene().setCursor(Cursor.HAND));
+
+        filterMirrorLabel.setOnMouseExited(event -> getScene().setCursor(Cursor.DEFAULT));
+
+        Tooltip.install(filterChoiceBox, getTooltipWithDelay("Выбрать поле", 10));
+
+        filterChoiceBox.setOnAction(event -> {
+            filterMirrorLabel.setText(filterChoiceBox.getValue());
+            filterIsSet = false;
+            underlineFilterCommand.setStroke(Color.web("white"));
+            filterField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
+        });
+
+        filterChoiceBox.setOnMouseEntered(event -> getScene().setCursor(Cursor.HAND));
+
+        filterChoiceBox.setOnMouseExited(event -> getScene().setCursor(Cursor.DEFAULT));
+
+        filterButton.setOnAction(event -> {
+            if (!filterMirrorLabel.getText().isEmpty()) {
+                underlineFilterCommand.setStroke(Color.web("#5454FF"));
+                if (filterField.getText().matches("[<>=][^<>=\\s]+")) {
+                    filterOperator = String.valueOf(filterField.getText().charAt(0));
+                    filterIsSet = true;
+                } else if (filterField.getText().matches("[<>!]=[^<>!=\\s]+")) {
+                    filterOperator = filterField.getText().substring(0, 2);
+                    filterIsSet = true;
+                } else {
+                    filterField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
+                    showAlert(AlertType.ERROR, "ERROR", "Ошибка при установке фильтра", "Неверный формат условия!\nПримеры корректных условий (числа):\n>5\n<5\n=5\n>=5\n<=5\n!=5\nПримеры корректных условий (строки):\n=text\n!=text");
+                    underlineFilterCommand.setStroke(Color.web("white"));
+                }
+                getScene().setCursor(Cursor.DEFAULT);
+            }
+        });
+
+        filterButton.setOnMouseEntered(event -> {
+            if (!filterMirrorLabel.getText().isEmpty() && !filterIsSet && !filterField.getText().isEmpty()) {
+                underlineFilterCommand.setStroke(Color.web("#5454FF"));
+                getScene().setCursor(Cursor.HAND);
+            }
+        });
+
+        filterButton.setOnMouseExited(event -> {
+            if (!filterIsSet) {
+                underlineFilterCommand.setStroke(Color.web("white"));
+                getScene().setCursor(Cursor.DEFAULT);
+            }
+        });
+
+        Tooltip.install(filterField, getTooltipWithDelay("Условие", 300));
+
+        filterField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                filterButton.fire();
+            } else {
+                filterField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
+                underlineFilterCommand.setStroke(Color.web("white"));
+                filterIsSet = false;
             }
         });
 
@@ -461,6 +566,7 @@ public class MainController extends Controller {
         synchronizer.setOnSucceeded(event -> {
             if (errCount < 10) {
                 showAlert(alertType, title, header, content);
+                underlineFilterCommand.setStroke(Color.web("white"));
                 synchronizer.reset();
                 synchronizer.start();
             } else {
@@ -499,64 +605,6 @@ public class MainController extends Controller {
                 }
             };
         }
-    }
-
-    private long fillTable(long count) {
-        ObservableList<Product> observableList = FXCollections.observableArrayList();
-
-        String jsonString = Client.sendCommandAndReceiveResult(new Show(Main.getUser()));
-        if (jsonString != null) {
-            if (!jsonString.equals("0")) {
-                try {
-                    int prevErrCount = errCount;
-                    JSONArray jsonArray = (JSONArray) new JSONParser().parse("[" + jsonString + "]");
-                    jsonArray.forEach(element -> {
-                        try {
-                            JSONObject o = (JSONObject) element;
-                            Product product = new Product(o.get("name").toString(), new Gson().fromJson(o.get("coordinates").toString(), Coordinates.class), ((Double) o.get("price")).floatValue(), o.get("partNumber").toString(), ((Double) o.get("manufactureCost")).floatValue(), UnitOfMeasure.fromString(o.get("unitOfMeasure").toString()), new Gson().fromJson(o.get("manufacturer").toString(), Organization.class));
-                            product.setId((Long) o.get("id"));
-                            product.setCreationDate(LocalDateTime.from(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").parse(o.get("creationDate").toString())).atZone(ZoneId.of("GMT+3")));
-                            product.setUser(new User(o.get("owner").toString()));
-                            observableList.add(product);
-                        } catch (JsonSyntaxException e) {
-                            errCount++;
-                            alertType = Alert.AlertType.ERROR;
-                            title = "ERROR";
-                            header = "Ошибка при загрузке элементов коллекции";
-                            content = e.getMessage();
-                        }
-                    });
-                    if (errCount > prevErrCount) {
-                        return count + 1;
-                    }
-                } catch (ParseException e) {
-                    errCount++;
-                    alertType = Alert.AlertType.ERROR;
-                    title = "ERROR";
-                    header = "Ошибка при загрузке элементов коллекции";
-                    content = e.getMessage();
-                    return count + 1;
-                }
-            } else if ((count == 0) && (!collectionIsEmpty)) {
-                collectionIsEmpty = true;
-                alertType = AlertType.INFORMATION;
-                title = "INFO";
-                header = "Коллекция пуста!";
-                content = "Не загружено ни одного элемента.";
-                return count + 1;
-            }
-        } else {
-            errCount++;
-            alertType = Alert.AlertType.ERROR;
-            title = "ERROR";
-            header = "Ошибка при загрузке элементов коллекции";
-            content = Client.getContent();
-            return count + 1;
-        }
-
-        tableOfProducts.getItems().clear();
-        tableOfProducts.getItems().addAll(observableList);
-        return 0;
     }
 
     private void prepareCommand() {
@@ -826,5 +874,169 @@ public class MainController extends Controller {
         Tooltip.install(turnoverField, getTooltipWithDelay("turnover", 10));
         Tooltip.install(empCountField, getTooltipWithDelay("empCount", 10));
         Tooltip.install(typeField, getTooltipWithDelay("type", 10));
+    }
+
+    private boolean mathcesFilter(Product product) {
+        try {
+            Field field = product.getClass().getDeclaredField(filterChoiceBox.getValue());
+            field.setAccessible(true);
+            String condition = filterField.getText();
+            Object fieldValue = field.get(product);
+
+            boolean isNumber;
+            try {
+                Number number = (Number) fieldValue;
+                isNumber = true;
+            } catch (ClassCastException e) {
+                isNumber = false;
+            }
+
+            Integer result = compareValues(fieldValue, condition.substring(filterOperator.length()), isNumber);
+            if (result == null) {
+                alertType = Alert.AlertType.ERROR;
+                title = "ERROR";
+                header = "Ошибка при установке фильтра";
+                content = "Невозможно сравнить число и строку!";
+                filterIsSet = false;
+                filterField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
+                return false;
+            } else {
+                switch (filterOperator) {
+                    case "<":
+                        if (isNumber) {
+                            return result > 0;
+                        } else {
+                            alertType = Alert.AlertType.ERROR;
+                            title = "ERROR";
+                            header = "Ошибка при установке фильтра";
+                            content = "Неверный формат условия!\nПримеры корректных условий (числа):\n>5\n<5\n=5\n>=5\n<=5\n!=5\nПримеры корректных условий (строки):\n=text\n!=text";
+                            filterIsSet = false;
+                            filterField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
+                            return false;
+                        }
+                    case ">":
+                        if (isNumber) {
+                            return result < 0;
+                        } else {
+                            alertType = Alert.AlertType.ERROR;
+                            title = "ERROR";
+                            header = "Ошибка при установке фильтра";
+                            content = "Неверный формат условия!\nПримеры корректных условий (числа):\n>5\n<5\n=5\n>=5\n<=5\n!=5\nПримеры корректных условий (строки):\n=text\n!=text";
+                            filterIsSet = false;
+                            filterField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
+                            return false;
+                        }
+                    case "=":
+                        return result == 0;
+                    case "<=":
+                        if (isNumber) {
+                            return result >= 0;
+                        } else {
+                            alertType = Alert.AlertType.ERROR;
+                            title = "ERROR";
+                            header = "Ошибка при установке фильтра";
+                            content = "Неверный формат условия!\nПримеры корректных условий (числа):\n>5\n<5\n=5\n>=5\n<=5\n!=5\nПримеры корректных условий (строки):\n=text\n!=text";
+                            filterIsSet = false;
+                            filterField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
+                            return false;
+                        }
+                    case ">=":
+                        if (isNumber) {
+                            return result <= 0;
+                        } else {
+                            alertType = Alert.AlertType.ERROR;
+                            title = "ERROR";
+                            header = "Ошибка при установке фильтра";
+                            content = "Неверный формат условия!\nПримеры корректных условий (числа):\n>5\n<5\n=5\n>=5\n<=5\n!=5\nПримеры корректных условий (строки):\n=text\n!=text";
+                            filterIsSet = false;
+                            filterField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
+                            return false;
+                        }
+                    case "!=":
+                        return result != 0;
+                }
+            }
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    private Integer compareValues(Object fieldValue, String conditionValue, boolean isNumber) {
+        if (isNumber) {
+            try {
+                Number number = NumberFormat.getInstance().parse(conditionValue);
+                Comparable<Object> numberValue = (Comparable<Object>) number;
+                return numberValue.compareTo(fieldValue);
+            } catch (ParseException e) {
+                return null;
+            }
+        } else {
+            return fieldValue.toString().compareTo(conditionValue);
+        }
+    }
+
+    private long fillTable(long count) {
+        ObservableList<Product> observableList = FXCollections.observableArrayList();
+
+        String jsonString = Client.sendCommandAndReceiveResult(new Show(Main.getUser()));
+        if (jsonString != null) {
+            if (!jsonString.equals("0")) {
+                try {
+                    JSONArray jsonArray = (JSONArray) new JSONParser().parse("[" + jsonString + "]");
+                    for (Object element : jsonArray) {
+                        try {
+                            JSONObject o = (JSONObject) element;
+                            Product product = new Product(o.get("name").toString(), new Gson().fromJson(o.get("coordinates").toString(), Coordinates.class), ((Double) o.get("price")).floatValue(), o.get("partNumber").toString(), ((Double) o.get("manufactureCost")).floatValue(), UnitOfMeasure.fromString(o.get("unitOfMeasure").toString()), new Gson().fromJson(o.get("manufacturer").toString(), Organization.class));
+                            product.setId((Long) o.get("id"));
+                            product.setCreationDate(LocalDateTime.from(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").parse(o.get("creationDate").toString())).atZone(ZoneId.of("GMT+3")));
+                            product.setUser(new User(o.get("owner").toString()));
+                            if (filterIsSet) {
+                                if (mathcesFilter(product)) {
+                                    observableList.add(product);
+                                } else if (!filterIsSet) {
+                                    observableList.add(product);
+                                    return count + 1;
+                                }
+                            } else {
+                                observableList.add(product);
+                            }
+                        } catch (JsonSyntaxException e) {
+                            errCount++;
+                            alertType = Alert.AlertType.ERROR;
+                            title = "ERROR";
+                            header = "Ошибка при загрузке элементов коллекции";
+                            content = e.getMessage();
+                            return count + 1;
+                        }
+                    }
+                } catch (org.json.simple.parser.ParseException e) {
+                    errCount++;
+                    alertType = Alert.AlertType.ERROR;
+                    title = "ERROR";
+                    header = "Ошибка при загрузке элементов коллекции";
+                    content = e.getMessage();
+                    return count + 1;
+                }
+            } else if ((count == 0) && (!collectionIsEmpty)) {
+                collectionIsEmpty = true;
+                alertType = AlertType.INFORMATION;
+                title = "INFO";
+                header = "Коллекция пуста!";
+                content = "Не загружено ни одного элемента.";
+                return count + 1;
+            }
+        } else {
+            errCount++;
+            alertType = Alert.AlertType.ERROR;
+            title = "ERROR";
+            header = "Ошибка при загрузке элементов коллекции";
+            content = Client.getContent();
+            return count + 1;
+        }
+
+        tableOfProducts.getItems().clear();
+        tableOfProducts.getItems().addAll(observableList);
+        return 0;
     }
 }

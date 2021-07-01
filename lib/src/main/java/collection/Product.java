@@ -19,7 +19,7 @@ public class Product implements Comparable<Product>, Serializable {
     public static Comparator<Product> byPriceComparator = (p1, p2) -> Float.compare(p1.price, p2.price);
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
-    private float price; //Значение поля должно быть больше 0
+    private Float price; //Значение поля должно быть больше 0
     private String partNumber; //Значение этого поля должно быть уникальным, Поле не может быть null
     private Float manufactureCost; //Поле не может быть null
     private UnitOfMeasure unitOfMeasure; //Поле не может быть null
@@ -27,20 +27,33 @@ public class Product implements Comparable<Product>, Serializable {
     private Long id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private java.time.ZonedDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
     private Organization manufacturer; //Поле может быть null
+    private Double x;
+    private Long y;
+    private String manufacturerName; //Поле не может быть null, Строка не может быть пустой
+    private Long annualTurnover; //Поле может быть null, Значение поля должно быть больше 0
+    private Long employeesCount; //Поле может быть null, Значение поля должно быть больше 0
+    private OrganizationType type; //Поле может быть null
+    private String owner;
 
     public Product() {
         this.creationDate = ZonedDateTime.now();
     }
 
-    public Product(String name, Coordinates coordinates, float price, String partNumber, Float manufactureCost, UnitOfMeasure unitOfMeasure, Organization manufacturer) {
+    public Product(String name, Coordinates coordinates, Float price, String partNumber, Float manufactureCost, UnitOfMeasure unitOfMeasure, Organization manufacturer) {
         this.name = name;
         this.coordinates = coordinates;
+        x = coordinates.getX();
+        y = coordinates.getY();
         this.creationDate = ZonedDateTime.now();
         this.price = price;
         this.partNumber = partNumber;
         this.manufactureCost = manufactureCost;
         this.unitOfMeasure = unitOfMeasure;
         this.manufacturer = manufacturer;
+        manufacturerName = manufacturer.getName();
+        annualTurnover = manufacturer.getAnnualTurnover();
+        employeesCount = manufacturer.getEmployeesCount();
+        type = manufacturer.getType();
     }
 
     @Override
@@ -144,6 +157,7 @@ public class Product implements Comparable<Product>, Serializable {
 
     public void setUser(User user) {
         this.user = user;
+        owner = user.getName();
     }
 
     public Double getX() {
