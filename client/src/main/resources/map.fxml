@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="665" prefWidth="1530" style="-fx-background-color: white;" stylesheets="styles.css" xmlns="http://javafx.com/javafx/8.0.261" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MapController">
+    <children>
+        <AnchorPane layoutY="161.0" prefHeight="337.0" prefWidth="1530.0" style="-fx-background-color: white;">
+            <children>
+                <Pane fx:id="paneForDrawing" layoutX="-1.0" prefHeight="355.0" prefWidth="1530.0" style="-fx-background-color: grey;" />
+            </children>
+        </AnchorPane>
+        <Label layoutX="656.0" layoutY="52.0" text="PRODMAN" textAlignment="CENTER">
+            <font>
+                <Font name="Consolas Bold" size="46.0" />
+            </font>
+        </Label>
+        <ChoiceBox fx:id="languageChoiceBox" layoutX="834.0" layoutY="64.0" opacity="0.0" prefWidth="150.0" style="-fx-background-color: white;" />
+        <Circle fx:id="languageCircle" layoutX="850.0" layoutY="79.0" radius="15.0" />
+        <ImageView fx:id="flag" fitHeight="28.0" fitWidth="28.0" layoutX="836.0" layoutY="65.0" pickOnBounds="true" preserveRatio="true" />
+        <Button fx:id="proceedButton" layoutX="655.0" layoutY="556.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="216.0" styleClass="blue-button" text="ВХОД" />
+        <Label fx:id="userLabel" alignment="CENTER" layoutX="705.0" layoutY="620.0" prefHeight="26.0" prefWidth="117.0" textAlignment="CENTER">
+            <font>
+                <Font name="Consolas Bold" size="21.0" />
+            </font>
+        </Label>
+        <ImageView fitHeight="22.0" fitWidth="32.0" layoutX="656.0" layoutY="622.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@images/users-black.png" />
+            </image>
+        </ImageView>
+        <ImageView fx:id="signoutImage" fitHeight="22.0" fitWidth="29.0" layoutX="843.0" layoutY="622.0">
+            <image>
+                <Image url="@images/sing-out-black.png" />
+            </image>
+        </ImageView>
+    </children>
+</AnchorPane>

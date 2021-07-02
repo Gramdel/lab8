@@ -70,7 +70,7 @@ public class Client {
             try {
                 SocketAddress address = new InetSocketAddress(hostname, port);
                 DatagramSocket socket = new DatagramSocket();
-                socket.setSoTimeout(150);
+                socket.setSoTimeout(300);
                 DatagramPacket packet = new DatagramPacket(b, b.length, address);
                 socket.send(packet);
                 getLogger().log(Level.INFO, "Пользователь успешно отправлен на сервер " + hostname + ":" + port + "!");

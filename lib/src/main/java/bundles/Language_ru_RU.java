@@ -32,6 +32,8 @@ public class Language_ru_RU extends ListResourceBundle {
             {"executeCommand", "Выполнить команду"},
             {"applyFilter", "Применить фильтр"},
             {"proceed", "ВЫПОЛНИТЬ"},
+            {"mapWindowTitle", "Карта объектов"},
+            {"toMap", "К карте объектов"},
             {"chooseCommand", "Выбрать команду"},
             {"chooseField", "Выбрать поле"},
             {"filterAlertHeader", "Ошибка при установке фильтра"},

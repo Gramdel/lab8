@@ -51,7 +51,7 @@
                  </font>
              </Button>
              <Label fx:id="filterMirrorLabel" layoutX="38.1" layoutY="168.0" prefHeight="22.0" prefWidth="202.0" textFill="WHITE" />
-             <Line fx:id="underlineFilterCommand" endX="110.0" layoutX="130.0" layoutY="149.0" startX="-100.0" stroke="WHITE" strokeWidth="3.0" />
+             <Line fx:id="underlineFilter" endX="110.0" layoutX="130.0" layoutY="149.0" startX="-100.0" stroke="WHITE" strokeWidth="3.0" />
              <TextField fx:id="filterField" alignment="CENTER" depthTest="DISABLE" layoutX="27.0" layoutY="210" prefHeight="31.0" prefWidth="215.0" promptText="Условие" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;">
                  <font>
                      <Font name="Consolas Bold" size="20.0" />
@@ -60,6 +60,12 @@
                      <Insets bottom="1.0" left="2.0" right="1.0" top="1.0" />
                  </padding>
              </TextField>
+             <Button fx:id="mapButton" layoutX="8.0" layoutY="246.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="262.0" style="-fx-background-color: transparent;" text="Карта объектов" textFill="WHITE">
+                 <font>
+                     <Font name="Consolas Bold" size="23.0" />
+                 </font>
+             </Button>
+             <Line fx:id="underlineMapButton" endX="110.0" layoutX="130.0" layoutY="289.0" startX="-100.0" stroke="WHITE" strokeWidth="3.0" />
          </children>
       </AnchorPane>
         <Label layoutX="27.0" layoutY="21.0" prefHeight="54.0" prefWidth="193.0" text="PRODMAN" textFill="WHITE">

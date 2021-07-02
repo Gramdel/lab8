@@ -53,7 +53,7 @@ public class MainController extends Controller {
     public Label goBackLabel;
 
     @FXML
-    public Line underlineFilterCommand;
+    public Line underlineFilter;
 
     @FXML
     public ChoiceBox<String> filterChoiceBox;
@@ -72,6 +72,12 @@ public class MainController extends Controller {
 
     @FXML
     public ChoiceBox<String> languageChoiceBox;
+
+    @FXML
+    public Button mapButton;
+
+    @FXML
+    public Line underlineMapButton;
 
     @FXML
     private TableView<Product> tableOfProducts;
@@ -201,6 +207,7 @@ public class MainController extends Controller {
         filterButton.setText(getStringFromBundle("applyFilter"));
         filterField.setPromptText(getStringFromBundle("condition"));
         proceedButton.setText(getStringFromBundle("proceed"));
+        mapButton.setText(getStringFromBundle("toMap"));
 
         ObservableList<String> languages = FXCollections.observableArrayList("en-CA", "ru-RU", "sl-SI", "sq-AL");
         languages.forEach(x -> {
@@ -327,7 +334,7 @@ public class MainController extends Controller {
         filterChoiceBox.setOnAction(event -> {
             filterMirrorLabel.setText(filterChoiceBox.getValue());
             filterIsSet = false;
-            underlineFilterCommand.setStroke(Color.web("white"));
+            underlineFilter.setStroke(Color.web("white"));
             filterField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
         });
 
@@ -337,7 +344,7 @@ public class MainController extends Controller {
 
         filterButton.setOnAction(event -> {
             if (!filterMirrorLabel.getText().isEmpty()) {
-                underlineFilterCommand.setStroke(Color.web("#5454FF"));
+                underlineFilter.setStroke(Color.web("#5454FF"));
                 if (filterField.getText().matches("[<>=][^<>=\\s]+")) {
                     filterOperator = String.valueOf(filterField.getText().charAt(0));
                     filterIsSet = true;
@@ -347,7 +354,7 @@ public class MainController extends Controller {
                 } else {
                     filterField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                     showAlert(AlertType.ERROR, "ERROR", getStringFromBundle("filterAlertHeader"), getStringFromBundle("filterConditionAlertContent"));
-                    underlineFilterCommand.setStroke(Color.web("white"));
+                    underlineFilter.setStroke(Color.web("white"));
                 }
                 getScene().setCursor(Cursor.DEFAULT);
             }
@@ -355,16 +362,35 @@ public class MainController extends Controller {
 
         filterButton.setOnMouseEntered(event -> {
             if (!filterMirrorLabel.getText().isEmpty() && !filterIsSet && !filterField.getText().isEmpty()) {
-                underlineFilterCommand.setStroke(Color.web("#5454FF"));
+                underlineFilter.setStroke(Color.web("#5454FF"));
                 getScene().setCursor(Cursor.HAND);
             }
         });
 
         filterButton.setOnMouseExited(event -> {
             if (!filterIsSet) {
-                underlineFilterCommand.setStroke(Color.web("white"));
+                underlineFilter.setStroke(Color.web("white"));
                 getScene().setCursor(Cursor.DEFAULT);
             }
+        });
+
+        mapButton.setOnAction(event -> {
+            try {
+                MapController.setProducts(tableOfProducts.getItems());
+                changeScene("map.fxml", "PRODMAN: " + getStringFromBundle("mapWindowTitle"));
+            } catch (IOException e) {
+                showAlert(AlertType.ERROR, "Error", getStringFromBundle("changeSceneError"), e.getMessage());
+            }
+        });
+
+        mapButton.setOnMouseEntered(event -> {
+            underlineMapButton.setStroke(Color.web("#5454FF"));
+            getScene().setCursor(Cursor.HAND);
+        });
+
+        mapButton.setOnMouseExited(event -> {
+            underlineMapButton.setStroke(Color.web("white"));
+            getScene().setCursor(Cursor.DEFAULT);
         });
 
         Tooltip.install(filterField, getTooltipWithDelay(getStringFromBundle("condition"), 300));
@@ -374,7 +400,7 @@ public class MainController extends Controller {
                 filterButton.fire();
             } else {
                 filterField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: white;");
-                underlineFilterCommand.setStroke(Color.web("white"));
+                underlineFilter.setStroke(Color.web("white"));
                 filterIsSet = false;
             }
         });
@@ -596,7 +622,7 @@ public class MainController extends Controller {
         synchronizer.setOnSucceeded(event -> {
             if (errCount < 4) {
                 showAlert(alertType, title, header, content);
-                underlineFilterCommand.setStroke(Color.web("white"));
+                underlineFilter.setStroke(Color.web("white"));
                 synchronizer.reset();
                 synchronizer.start();
             } else {

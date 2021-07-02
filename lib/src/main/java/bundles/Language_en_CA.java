@@ -12,9 +12,6 @@ public class Language_en_CA extends ListResourceBundle {
             {"wrongPortAlertContent", "Unable to launch the app because of invalid port format!\n(a number from 1 to 65535 must be specified via second argument of the command line)"},
 
             //start.fxml
-            {"executeCommand", "Execute command"},
-            {"applyFilter", "Apply a filter"},
-            {"proceed", "PROCEED"},
             {"startWindowTitle", "Sign into app"},
             {"authorisation", "Authorize"},
             {"registration", "Register"},
@@ -32,6 +29,11 @@ public class Language_en_CA extends ListResourceBundle {
             {"userAlreadyExists", "That user is already\nregistered!"},
 
             //main.fxml
+            {"executeCommand", "Execute command"},
+            {"applyFilter", "Apply a filter"},
+            {"proceed", "PROCEED"},
+            {"mapWindowTitle", "Object map"},
+            {"toMap", "To object map"},
             {"chooseCommand", "Choose command"},
             {"chooseField", "Choose field"},
             {"filterAlertHeader", "Filter configuration error"},
