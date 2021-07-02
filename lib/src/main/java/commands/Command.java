@@ -7,11 +7,12 @@ import core.Interpreter;
 import core.User;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashSet;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public abstract class Command implements Serializable {
+    protected String tag;
+
     protected User user;
 
     protected String content;
@@ -32,5 +33,14 @@ public abstract class Command implements Serializable {
 
     public String getContent() {
         return content;
+    }
+
+    protected String getStringFromBundle(String key) {
+        ResourceBundle bundle = ResourceBundle.getBundle("bundles.Language", Locale.forLanguageTag(tag));
+        return new String(bundle.getString(key).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }

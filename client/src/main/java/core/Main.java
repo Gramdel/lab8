@@ -8,18 +8,22 @@ import javafx.stage.Stage;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import static core.WindowManager.setPrimaryStage;
-import static core.WindowManager.showAlert;
+import static core.WindowManager.*;
 
 public class Main extends Application {
     private static Logger logger;
     private static String[] args;
     private static User user;
     private static InterpreterForClient interpreter;
+    private static ResourceBundle currentBundle;
+
 
     public static void main(String[] args) {
         Main.args = args;
@@ -37,12 +41,12 @@ public class Main extends Application {
             LogManager.getLogManager().readConfiguration(new ByteArrayInputStream(loggerCfg.getBytes()));
             logger = Logger.getLogger(Main.class.getName());
         } catch (IOException e) {
-            System.out.println("Не удалось инициализировать логгер!");
+            e.printStackTrace();
         }
 
         if (args.length < 2) {
-            logger.log(Level.WARNING, "Не удалось запустить программу, т.к. не переданы IP и порт!");
-            showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка запуска программы", "Программа не запущена, так как не переданы IP (или hostname) и порт сервера!\n(Они должны быть переданы через аргументы командной строки. Формат IP: xxx.xxx.xxx.xxx; формат hostname: непустая строка; формат порта: число от 1 до 65535.)");
+            logger.log(Level.WARNING, getStringFromBundle("cantStartErrorForLog"));
+            showAlert(Alert.AlertType.ERROR, "ERROR", getStringFromBundle("cantStartAlertHeader"), getStringFromBundle("cantStartAlertContent"));
         } else {
             try {
                 int port = Integer.parseInt(args[1]);
@@ -50,24 +54,17 @@ public class Main extends Application {
                     throw new NumberFormatException();
                 } else {
                     Client.setProperties(args[0], port);
-
+                    Main.setCurrentBundle("en-CA");
                     Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/start.fxml")));
-
+                    primaryStage.setTitle("PRODMAN: " + getStringFromBundle("startWindowTitle"));
                     primaryStage.setResizable(false);
                     primaryStage.setScene(scene);
-                    primaryStage.setTitle("PRODMAN: Авторизация");
                     setPrimaryStage(primaryStage);
                     primaryStage.show();
-
-                    //Client.settUser();
-
-                    //System.out.println("Для получения списка команд введите help. \n" + "Введите команду:");
-                    //InterpreterForClient interpreter = new InterpreterForClient(user);
-                    //interpreter.fromStream(System.in, true);
                 }
             } catch (NumberFormatException e) {
-                logger.log(Level.WARNING, "Не удалось запустить программу из-за неправильного формата порта: " + args[1] + "!");
-                showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка запуска программы", "Программа не запущена, так как указан неправильный формат порта!\n(число от 1 до 65535 должно быть передано вторым аргументом командной строки)");
+                logger.log(Level.WARNING, getStringFromBundle("wrongPortErrorForLog") + args[1] + "!");
+                showAlert(Alert.AlertType.ERROR, "ERROR", getStringFromBundle("cantStartAlertHeader"), getStringFromBundle("wrongPortAlertContent"));
             }
         }
     }
@@ -92,7 +89,19 @@ public class Main extends Application {
         return interpreter;
     }
 
-    public static Thread getThread() {
-        return Thread.currentThread();
+    public static void setCurrentBundle(String tag) {
+        Main.currentBundle = ResourceBundle.getBundle("bundles.Language", Locale.forLanguageTag(tag));
+    }
+
+    public static String getStringFromBundle(String key) {
+        return new String(currentBundle.getString(key).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+    }
+
+    public static String getCurrentBundleName() {
+        return currentBundle.getLocale().getLanguage()+"-"+currentBundle.getLocale().getCountry();
+    }
+
+    public static ResourceBundle getCurrentBundle() {
+        return currentBundle;
     }
 }

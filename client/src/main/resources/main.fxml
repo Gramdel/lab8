@@ -10,12 +10,12 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="665.0" prefWidth="1530.0" style="-fx-background-image: url('/images/bg2.jpg'); -fx-background-position: left; -fx-background-color: #1F2850;" stylesheets="styles.css" xmlns="http://javafx.com/javafx/8.0.261" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainController">
     <children>
+        <ChoiceBox fx:id="languageChoiceBox" layoutX="211.0" layoutY="32.0" opacity="0.0" prefHeight="31.0" prefWidth="87.0" style="-fx-background-color: transparent;" />
           <TableView fx:id="tableOfProducts" layoutX="271.0" prefHeight="665.0" prefWidth="1259.0">
               <columns>
                   <TableColumn fx:id="idColumn" maxWidth="178.0" minWidth="19.0" prefWidth="44.0" text="id" />
@@ -67,7 +67,7 @@
                 <Font name="Consolas Bold" size="47.0" />
             </font>
         </Label>
-      <Circle fx:id="languageCircle" fill="WHITE" layoutX="227.0" layoutY="48.0" radius="16.0" />
+        <ImageView fx:id="flag" fitHeight="32.5" fitWidth="30.0" layoutX="213.0" layoutY="32.5" pickOnBounds="true" preserveRatio="true" />
         <AnchorPane fx:id="commandsAnchorPane" layoutY="64.0" prefHeight="545.0" prefWidth="271.0" style="-fx-background-color: transparent;" visible="false">
             <children>
                 <Label fx:id="chosenCommandLabel" alignment="CENTER" layoutX="27.0" layoutY="10.0" prefHeight="36.0" prefWidth="215.0" style="-fx-background-color: transparent;" textFill="WHITE">

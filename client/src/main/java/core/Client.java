@@ -52,6 +52,7 @@ public class Client {
                 getLogger().log(Level.WARNING, "Не удаётся подключиться к серверу " + hostname + ":" + port + "!");
             }
         } catch (IOException e) {
+            e.printStackTrace();
             content = "Ошибка сериализации!";
             getLogger().log(Level.WARNING, "Ошибка сериализации!");
         }

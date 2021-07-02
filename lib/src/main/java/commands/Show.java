@@ -6,9 +6,7 @@ import core.DBUnit;
 import core.Interpreter;
 import core.User;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashSet;
+import java.util.*;
 
 public class Show extends Command {
     public Show(User user) {
@@ -17,8 +15,9 @@ public class Show extends Command {
 
     @Override
     public boolean prepare(String arg, boolean isInteractive, Interpreter interpreter) {
+        tag = interpreter.getTag();
         if (!arg.matches("\\s*")) {
-            System.out.println("У команды show не может быть аргументов!");
+            //System.out.println("У команды show не может быть аргументов!");
             return false;
         }
         return true;
@@ -38,11 +37,11 @@ public class Show extends Command {
 
     @Override
     public String description() {
-        return "Выводит коллекцию." + syntax();
+        return getStringFromBundle("showDesc") + syntax();
     }
 
     @Override
     public String syntax() {
-        return " Синтаксис: show";
+        return getStringFromBundle("showSyntax");
     }
 }

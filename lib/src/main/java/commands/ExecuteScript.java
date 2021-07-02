@@ -11,10 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Stack;
+import java.util.*;
 
 public class ExecuteScript extends Command {
     private final Stack<String> scripts = new Stack<>();
@@ -26,16 +23,17 @@ public class ExecuteScript extends Command {
 
     @Override
     public boolean prepare(String arg, boolean isInteractive, Interpreter interpreter) {
+        tag = interpreter.getTag();
         if (!Files.exists(Paths.get(arg))) {
-            content = "Скрипта с именем " + arg + " не существует!";
+            content = getStringFromBundle("execMsg") + arg + getStringFromBundle("execError");
         } else if (Files.isDirectory(Paths.get(arg))) {
-            content = "Скрипт с именем " + arg + " не выполнен, так как в качестве исполняемого файла была передана директория.";
+            content = getStringFromBundle("execMsg") + arg + getStringFromBundle("execError1");
         } else if (!Files.isRegularFile(Paths.get(arg))) {
-            content = "Скрипт с именем " + arg + " не выполнен, так как в качестве исполняемого файла был передан специальный файл.";
+            content = getStringFromBundle("execMsg") + arg + getStringFromBundle("execError2");
         } else if (!Files.isReadable(Paths.get(arg))) {
-            content = "Скрипт с именем " + arg + " не выполнен, так как у исполняемого файла нет прав на чтение.";
+            content = getStringFromBundle("execMsg") + arg + getStringFromBundle("execError3");
         } else if (scripts.contains(arg)) {
-            content = "Скрипт с именем " + arg + " не выполнен, так как он вызывает сам себя!";
+            content = getStringFromBundle("execMsg") + arg + getStringFromBundle("execError4");
         } else {
             try {
                 scripts.push(arg);
@@ -44,7 +42,7 @@ public class ExecuteScript extends Command {
                 scripts.remove(arg);
                 return true;
             } catch (FileNotFoundException e) {
-                content = "Скрипта с именем " + arg + " не существует!";
+                content = getStringFromBundle("execMsg") + arg + getStringFromBundle("execError");
             }
         }
         return false;
@@ -52,16 +50,16 @@ public class ExecuteScript extends Command {
 
     @Override
     public synchronized String execute(LinkedHashSet<Product> collection, ArrayList<Organization> organizations, Date date, DBUnit dbUnit) {
-        return "Скрипт из файла " + arg + " выполнен!";
+        return getStringFromBundle("execMsg") + arg + getStringFromBundle("execSuccess");
     }
 
     @Override
     public String description() {
-        return "Выполняет скрипт." + syntax();
+        return getStringFromBundle("execDesc") + syntax();
     }
 
     @Override
     public String syntax() {
-        return " Синтаксис: execute_script file_name, где file_name - полное (с расширением) имя файла.";
+        return getStringFromBundle("execSyntax");
     }
 }

@@ -7,10 +7,7 @@ import core.DBUnit;
 import core.Interpreter;
 import core.User;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,6 +20,7 @@ public class RemoveByUOM extends Command {
 
     @Override
     public boolean prepare(String arg, boolean isInteractive, Interpreter interpreter) {
+        tag = interpreter.getTag();
         try {
             if (!arg.matches("\\s*[^\\s]+\\s*")) {
                 throw new IllegalArgumentException();
@@ -33,7 +31,7 @@ public class RemoveByUOM extends Command {
                 }
             }
         } catch (IllegalArgumentException e) {
-            content = "У команды remove_any_by_unit_of_measure должен быть 1 аргумент из следующего списка: " + UnitOfMeasure.valueList() + ".";
+            content = getStringFromBundle("removeUOMError") + UnitOfMeasure.valueList() + ".";
             return false;
         }
         return true;
@@ -50,25 +48,25 @@ public class RemoveByUOM extends Command {
                     if (collection.stream().filter(x -> x.getManufacturer().equals(optional.get().getManufacturer())).count() == 1) {
                         organizations.remove(optional.get().getManufacturer());
                     }
-                    return "Один из элементов с unitOfMeasure " + unitOfMeasure + " успешно удалён!";
+                    return getStringFromBundle("removeUOMSuccess1") + unitOfMeasure + getStringFromBundle("removeUOMSuccess2");
                 } else {
-                    return "При удалении элемента с unitOfMeasure " + unitOfMeasure + " произошла ошибка SQL!";
+                    return getStringFromBundle("removeUOMError1") + unitOfMeasure + getStringFromBundle("removeUOMError2");
                 }
             } else {
-                return "Было найдено " + count + " элементов с unitOfMeasure " + unitOfMeasure + ", но вы не являетесь владельцем ни одного из них, поэтому у вас нет прав на удаление!";
+                return getStringFromBundle("removeUOMError3") + count + getStringFromBundle("removeUOMError4") + unitOfMeasure + getStringFromBundle("removeUOMError5");
             }
         } else {
-            return "Удаление невозможно, так как в коллекции нет элементов с unitOfMeasure " + unitOfMeasure + "!";
+            return getStringFromBundle("removeUOMError6") + unitOfMeasure + "!";
         }
     }
 
     @Override
     public String description() {
-        return "Удаляет из коллекции один из элементов с unitOfMeasure эквивалентным заданному." + syntax();
+        return getStringFromBundle("removeUOMDesc") + syntax();
     }
 
     @Override
     public String syntax() {
-        return " Синтаксис: remove_any_by_unit_of_measure unitOfMeasure, где unitOfMeasure: " + UnitOfMeasure.valueList() + ".";
+        return getStringFromBundle("removeUOMSyntax") + UnitOfMeasure.valueList() + ".";
     }
 }

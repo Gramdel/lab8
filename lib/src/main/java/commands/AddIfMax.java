@@ -9,10 +9,7 @@ import core.DBUnit;
 import core.Interpreter;
 import core.User;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,14 +23,15 @@ public class AddIfMax extends Command {
     @Override
     public boolean prepare(String arg, boolean isInteractive, Interpreter interpreter) {
         Product product = null;
+        tag = interpreter.getTag();
         try {
             if (isInteractive) {
                 if (!arg.matches("\\s*")) {
-                    throw new IllegalArgumentException("У команды add_if_max не может быть аргументов!");
+                    throw new IllegalArgumentException(getStringFromBundle("addIfMaxInteractiveError"));
                 }
             } else {
                 if (!arg.matches("\\s*\\{.*}\\s*")) {
-                    throw new IllegalArgumentException("У команды add_if_max должен быть 1 аргумент: JSON-строка!");
+                    throw new IllegalArgumentException(getStringFromBundle("addIfMaxNotInteractiveError"));
                 } else {
                     Matcher m = Pattern.compile("\\{.*}").matcher(arg);
                     if (m.find()) {
@@ -43,11 +41,11 @@ public class AddIfMax extends Command {
             }
             product = Creator.createProduct(product, isInteractive);
             if (product == null) {
-                content = "Команда add_if_max не выполнена, т.к. не получилось создать продукт!";
+                content = getStringFromBundle("productCreationError");
                 return false;
             }
         } catch (JsonSyntaxException | NumberFormatException e) {
-            content = "Ошибка в синтаксисе JSON-строки! "+e.getMessage();
+            content = getStringFromBundle("jsonError")+e.getMessage();
             return false;
         } catch (IllegalArgumentException e) {
             content = e.getMessage();
@@ -72,13 +70,12 @@ public class AddIfMax extends Command {
                         organizations.add(product.getManufacturer());
                     }
                     collection.add(product);
-                    //return "Элемент успешно добавлен, т.к. его цена - наибольшая в коллекции!";
                     return "0";
                 } else {
-                    return "Несмотря на то, что цена элемента - наибольшая, он не был добавлен из-за ошибки SQL!";
+                    return getStringFromBundle("addIfMaxSqlError");
                 }
             } else {
-                return "Элемент не добавлен, т.к. его цена - НЕ наибольшая в коллекции.";
+                return getStringFromBundle("addIfMaxError");
             }
         } else {
             product.createId(collection);
@@ -93,18 +90,18 @@ public class AddIfMax extends Command {
                 collection.add(product);
                 return "0";
             } else {
-                return "Несмотря на то, что цена элемента - наибольшая (коллекция пуста), он не был добавлен из-за ошибка SQL!";
+                return getStringFromBundle("addIfMaxSqlError2");
             }
         }
     }
 
     @Override
     public String description() {
-        return "Добавляет новый элемент в коллекцию, если его цена - наибольшая в коллекции." + syntax();
+        return getStringFromBundle("addIfMaxDesc") + syntax();
     }
 
     @Override
     public String syntax() {
-        return " Синтаксис: add_if_max \n\t\t(В скриптах - add_if_max {element}, где {element} - JSON-строка)";
+        return getStringFromBundle("addIfMaxSyntax");
     }
 }

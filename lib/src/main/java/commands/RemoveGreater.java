@@ -9,10 +9,7 @@ import core.DBUnit;
 import core.Interpreter;
 import core.User;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,15 +22,16 @@ public class RemoveGreater extends Command {
 
     @Override
     public boolean prepare(String arg, boolean isInteractive, Interpreter interpreter) {
+        tag = interpreter.getTag();
         Product product = null;
         try {
             if (isInteractive) {
                 if (!arg.matches("\\s*")) {
-                    throw new IllegalArgumentException("У команды remove_greater не может быть аргументов!");
+                    throw new IllegalArgumentException(getStringFromBundle("rgInteractiveError"));
                 }
             } else {
                 if (!arg.matches("\\s*\\{.*}\\s*")) {
-                    throw new IllegalArgumentException("У команды remove_greater должен быть 1 аргумент: JSON-строка!");
+                    throw new IllegalArgumentException(getStringFromBundle("rgNotInteractiveError"));
                 } else {
                     Matcher m = Pattern.compile("\\{.*}").matcher(arg);
                     if (m.find()) {
@@ -43,11 +41,11 @@ public class RemoveGreater extends Command {
             }
             product = Creator.createProduct(product, isInteractive);
             if (product == null) {
-                content = "Команда remove_greater не выполнена, т.к. не получилось создать продукт!";
+                content = getStringFromBundle("productCreationError");
                 return false;
             }
         } catch (JsonSyntaxException | NumberFormatException e) {
-            content = "Ошибка в синтаксисе JSON-строки! "+e.getMessage();
+            content = getStringFromBundle("jsonError")+e.getMessage();
             return false;
         } catch (IllegalArgumentException e) {
             content = e.getMessage();
@@ -61,7 +59,7 @@ public class RemoveGreater extends Command {
     public synchronized String execute(LinkedHashSet<Product> collection, ArrayList<Organization> organizations, Date date, DBUnit dbUnit) {
         int prevSize = collection.size();
         if (prevSize == 0) {
-            return "Т.к. коллекция пуста, невозможно удалить из неё элементы, цена которых больше цены данного.";
+            return getStringFromBundle("rgError");
         } else {
             StringBuilder s = new StringBuilder();
             for (Iterator<Product> iter = collection.iterator(); iter.hasNext(); ) {
@@ -74,10 +72,10 @@ public class RemoveGreater extends Command {
                             }
                             iter.remove();
                         } else {
-                            s.append("При удалении элемента с id ").append(product.getId()).append(" произошла ошибка SQL!\n");
+                            s.append(getStringFromBundle("removeError1")).append(product.getId()).append(getStringFromBundle("removeError2")).append("\n");
                         }
                     } else {
-                        s.append("Вы не являетесь владельцем элемента с id ").append(product.getId()).append(", поэтому у вас нет прав на его удаление!\n");
+                        s.append(getStringFromBundle("removeError3")).append(product.getId()).append(getStringFromBundle("removeError4")).append("\n");
                     }
                 }
             }
@@ -85,21 +83,21 @@ public class RemoveGreater extends Command {
                 if (s.toString().isEmpty()) {
                     return "0";
                 } else {
-                    return s + "Не все элементы, цена которых больше цены данного, были удалены!";
+                    return s + getStringFromBundle("rgError1");
                 }
             } else {
-                return s + "Ничего не удалено, т.к. в коллекции нет элементов, цена которых больше цены данного, или возникли ошибки!";
+                return s + getStringFromBundle("rgError2");
             }
         }
     }
 
     @Override
     public String description() {
-        return "Удаляет из коллеккции все элементы, цена которых больше цены данного." + syntax();
+        return getStringFromBundle("rgDesc") + syntax();
     }
 
     @Override
     public String syntax() {
-        return " Синтаксис: remove_greater \n\t(В скриптах - remove_greater {element}";
+        return getStringFromBundle("rgSyntax");
     }
 }

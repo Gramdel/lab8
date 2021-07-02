@@ -4,18 +4,33 @@ import core.Client;
 import core.InterpreterForClient;
 import core.Main;
 import core.User;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 import java.io.IOException;
 
+import static core.Main.*;
 import static core.WindowManager.*;
 
 public class StartController extends Controller {
+
+    @FXML
+    public AnchorPane anchorPane;
+
+    @FXML
+    public ChoiceBox<String> languageChoiceBox;
+
+    @FXML
+    public ImageView flag;
 
     private int mode;
 
@@ -45,6 +60,12 @@ public class StartController extends Controller {
 
     @FXML
     void initialize() {
+        authorisationButton.setText(getStringFromBundle("authorisation"));
+        registrationButton.setText(getStringFromBundle("registration"));
+        proceedButton.setText(getStringFromBundle("proceedSignIn"));
+        loginField.setPromptText(getStringFromBundle("login"));
+        passwordField.setPromptText(getStringFromBundle("password"));
+
         authorisationButton.setOnAction(event -> {
             if (mode == 1) {
                 mode = 0;
@@ -52,7 +73,7 @@ public class StartController extends Controller {
                 registrationButton.setTextFill(Color.web("#838aa2"));
                 underlineLogin.setVisible(true);
                 underlineRegister.setVisible(false);
-                proceedButton.setText("ВХОД");
+                proceedButton.setText(getStringFromBundle("proceedSignIn"));
                 errorLabel.setText("");
                 getScene().setCursor(Cursor.DEFAULT);
                 loginField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
@@ -95,7 +116,7 @@ public class StartController extends Controller {
                 registrationButton.setTextFill(Color.web("#ffffff"));
                 underlineLogin.setVisible(false);
                 underlineRegister.setVisible(true);
-                proceedButton.setText("РЕГИСТРАЦИЯ");
+                proceedButton.setText(getStringFromBundle("proceedSignUp"));
                 errorLabel.setText("");
                 getScene().setCursor(Cursor.DEFAULT);
                 loginField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;");
@@ -103,7 +124,7 @@ public class StartController extends Controller {
             }
         });
 
-        Tooltip.install(loginField, getTooltipWithDelay("Логин", 300));
+        Tooltip.install(loginField, getTooltipWithDelay(getStringFromBundle("login"), 300));
 
         loginField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
@@ -113,7 +134,7 @@ public class StartController extends Controller {
             }
         });
 
-        Tooltip.install(passwordField, getTooltipWithDelay("Пароль", 300));
+        Tooltip.install(passwordField, getTooltipWithDelay(getStringFromBundle("password"), 300));
 
         passwordField.setOnKeyPressed(event -> {
             if (!proceedButton.isArmed()) {
@@ -148,6 +169,30 @@ public class StartController extends Controller {
             proceed();
             proceedButton.disarm();
         });
+
+        ObservableList<String> languages = FXCollections.observableArrayList("en-CA", "ru-RU", "sl-SI", "sq-AL");
+        languages.forEach(x -> {
+            if (!languageChoiceBox.getItems().contains(x)) {
+                languageChoiceBox.getItems().add(x);
+            }
+        });
+        languageChoiceBox.getSelectionModel().select(getCurrentBundleName());
+        languageChoiceBox.setOnAction(event -> {
+            setCurrentBundle(languageChoiceBox.getValue());
+            initialize();
+        });
+
+        Tooltip.install(flag, getTooltipWithDelay("Change language", 10));
+
+        flag.setImage(new Image("/images/" + getCurrentBundleName() + ".png"));
+
+        flag.setOnMouseEntered(event -> getScene().setCursor(Cursor.HAND));
+
+        flag.setOnMouseExited(event -> getScene().setCursor(Cursor.DEFAULT));
+
+        flag.setOnMouseClicked(event -> {
+            languageChoiceBox.show();
+        });
     }
 
     void proceed() {
@@ -156,17 +201,17 @@ public class StartController extends Controller {
         String password = passwordField.getText().trim();
         boolean noErrors = true;
         if (name.isEmpty()) {
-            errorLabel.setText("Имя пользователя не может\nбыть пустым!");
+            errorLabel.setText(getStringFromBundle("emptyLoginError"));
             loginField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
             noErrors = false;
         } else if (name.length() > 20) {
-            errorLabel.setText("Имя пользователя не может\nбыть длиннее 20 символов!");
+            errorLabel.setText(getStringFromBundle("longLoginError"));
             loginField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
             noErrors = false;
         }
 
         if (password.isEmpty()) {
-            errorLabel.setText("Пароль не может быть пустым!");
+            errorLabel.setText(getStringFromBundle("emptyPasswordError"));
             passwordField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
             noErrors = false;
         }
@@ -181,24 +226,24 @@ public class StartController extends Controller {
                         Main.setUser(user);
                         Main.setInterpreter(new InterpreterForClient(user));
                         try {
-                            changeScene("main.fxml", "PRODMAN: Управление коллекцией продуктов");
+                            changeScene("main.fxml", "PRODMAN: " + getStringFromBundle("mainWindowTitle"));
                         } catch (IOException e) {
-                            showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка смены сцены", e.getMessage());
+                            showAlert(Alert.AlertType.ERROR, "ERROR", getStringFromBundle("changeSceneError"), e.getMessage());
                         }
                         break;
                     case 1:
-                        errorLabel.setText("Неправильный пароль!");
+                        errorLabel.setText(getStringFromBundle("wrongPassword"));
                         passwordField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
                         break;
                     case 2:
-                        errorLabel.setText("Такого пользователя не существует!");
+                        errorLabel.setText(getStringFromBundle("userNotExists"));
                         loginField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
                         break;
                     case 3:
-                        errorLabel.setText("Сервер не смог подключиться к базе данных!\nПопробуйте ещё раз.");
+                        errorLabel.setText(getStringFromBundle("serverCantConnectToDB"));
                         break;
                     case 4:
-                        errorLabel.setText("Такой пользователь\nуже зарегистрирован!");
+                        errorLabel.setText(getStringFromBundle("userAlreadyExists"));
                         loginField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: #ff2626;");
                         break;
                 }

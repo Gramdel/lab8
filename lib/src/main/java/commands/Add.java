@@ -9,10 +9,7 @@ import core.DBUnit;
 import core.Interpreter;
 import core.User;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,15 +22,16 @@ public class Add extends Command {
 
     @Override
     public boolean prepare(String arg, boolean isInteractive, Interpreter interpreter) {
+        tag = interpreter.getTag();
         Product product = null;
         try {
             if (isInteractive) {
                 if (!arg.matches("\\s*")) {
-                    throw new IllegalArgumentException("У команды add не может быть аргументов!");
+                    throw new IllegalArgumentException(getStringFromBundle("addInteractiveError"));
                 }
             } else {
                 if (!arg.matches("\\s*\\{.*}\\s*")) {
-                    throw new IllegalArgumentException("У команды add должен быть 1 аргумент: JSON-строка!");
+                    throw new IllegalArgumentException(getStringFromBundle("addNotInteractiveError"));
                 } else {
                     Matcher m = Pattern.compile("\\{.*}").matcher(arg);
                     if (m.find()) {
@@ -43,11 +41,11 @@ public class Add extends Command {
             }
             product = Creator.createProduct(product, isInteractive);
             if (product == null) {
-                content = "Команда add не выполнена, т.к. не получилось создать продукт!";
+                content = getStringFromBundle("productCreationError");
                 return false;
             }
         } catch (JsonSyntaxException | NumberFormatException e) {
-            content = "Ошибка в синтаксисе JSON-строки! "+e.getMessage();
+            content = getStringFromBundle("jsonError")+e.getMessage();
             return false;
         } catch (IllegalArgumentException e) {
             content = e.getMessage();
@@ -72,17 +70,17 @@ public class Add extends Command {
             collection.add(product);
             return "0";
         } else {
-            return "При добавлении элемента возникла ошибка SQL!";
+            return getStringFromBundle("addSqlError");
         }
     }
 
     @Override
     public String description() {
-        return "Добавляет новый элемент в коллекцию." + syntax();
+        return  getStringFromBundle("addDescription")+ syntax();
     }
 
     @Override
     public String syntax() {
-        return " Синтаксис: add \n\t(В скриптах - add {element})";
+        return getStringFromBundle("addSyntax");
     }
 }

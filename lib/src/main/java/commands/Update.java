@@ -9,10 +9,7 @@ import core.DBUnit;
 import core.Interpreter;
 import core.User;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,11 +23,12 @@ public class Update extends Command {
 
     @Override
     public boolean prepare(String arg, boolean isInteractive, Interpreter interpreter) {
+        tag = interpreter.getTag();
         Product product = null;
         try {
             if (isInteractive) {
                 if (!arg.matches("\\s*\\d+\\s*")) {
-                    throw new IllegalArgumentException("У команды update быть 1 аргумент - положительное целое число!");
+                    throw new IllegalArgumentException(getStringFromBundle("updateInteractiveError"));
                 } else {
                     Matcher m = Pattern.compile("\\d+").matcher(arg);
                     if (m.find()) {
@@ -40,13 +38,13 @@ public class Update extends Command {
                                 throw new NumberFormatException();
                             }
                         } catch (NumberFormatException e) {
-                            throw new IllegalArgumentException("У команды update быть 1 аргумент - положительное целое число!");
+                            throw new IllegalArgumentException(getStringFromBundle("updateInteractiveError"));
                         }
                     }
                 }
             } else {
                 if (!arg.matches("\\s*\\d+\\s+\\{.*}\\s*")) {
-                    throw new IllegalArgumentException("У команды update должно быть 2 аргумента: положительное целое число и JSON-строка!");
+                    throw new IllegalArgumentException(getStringFromBundle("updateNotInteractiveError"));
                 } else {
                     Matcher m = Pattern.compile("\\{.*}").matcher(arg);
                     if (m.find()) {
@@ -57,18 +55,18 @@ public class Update extends Command {
                         try {
                             id = Long.parseLong(m.group());
                         } catch (NumberFormatException e) {
-                            throw new IllegalArgumentException("У команды update должно быть 2 аргумента: положительное целое число и JSON-строка!");
+                            throw new IllegalArgumentException(getStringFromBundle("updateNotInteractiveError"));
                         }
                     }
                 }
             }
             product = Creator.createProduct(product, isInteractive);
             if (product == null) {
-                content = "Команда update не выполнена, т.к. не получилось создать продукт!";
+                content = getStringFromBundle("productCreationError");
                 return false;
             }
         } catch (JsonSyntaxException | NumberFormatException e) {
-            content = "Ошибка в синтаксисе JSON-строки! "+e.getMessage();
+            content = getStringFromBundle("jsonError")+e.getMessage();
             return false;
         } catch (IllegalArgumentException e) {
             content = e.getMessage();
@@ -83,7 +81,7 @@ public class Update extends Command {
     public synchronized String execute(LinkedHashSet<Product> collection, ArrayList<Organization> organizations, Date date, DBUnit dbUnit) {
         Optional<Product> optional = collection.stream().filter(x -> x.getId().equals(id)).findAny();
         if (!optional.isPresent()) {
-            return "Нечего обновлять: элемента с id " + id + " нет в коллекции!";
+            return getStringFromBundle("updateError1") + id + getStringFromBundle("updateError2");
         } else {
             Product product = optional.get();
             if (user.getName().equals("admin") || product.getUser().getName().equals(this.product.getUser().getName())) {
@@ -108,21 +106,21 @@ public class Update extends Command {
                     return "0";
                     //return "Элемент c id " + id + " успешно обновлён!";
                 } else {
-                    return "При обновлении элемента с id " + id + " возникла ошибка SQL!";
+                    return getStringFromBundle("updateError3") + id + getStringFromBundle("removeError2");
                 }
             } else {
-                return "Вы не являетесь владельцем элемента с id " + id + ", поэтому у вас нет прав на его изменение!";
+                return getStringFromBundle("removeError3") + id + getStringFromBundle("removeError4");
             }
         }
     }
 
     @Override
     public String description() {
-        return "Обновляет значение элемента коллекции, id которого равен заданному." + syntax();
+        return getStringFromBundle("updateDesc") + syntax();
     }
 
     @Override
     public String syntax() {
-        return " Синтаксис: update id, где id - целое положительное число. \n\t\t(В скриптах - update id {element}, где {element} - JSON-строка)";
+        return getStringFromBundle("updateSyntax");
     }
 }

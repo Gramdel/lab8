@@ -6,10 +6,7 @@ import core.DBUnit;
 import core.Interpreter;
 import core.User;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Stack;
+import java.util.*;
 
 public class History extends Command {
     private Stack<String> history;
@@ -20,8 +17,9 @@ public class History extends Command {
 
     @Override
     public boolean prepare(String arg, boolean isInteractive, Interpreter interpreter) {
+        tag = interpreter.getTag();
         if (!arg.matches("\\s*")) {
-            content = "У команды history не может быть аргументов!";
+            content = getStringFromBundle("historyError");
             return false;
         }
         history = interpreter.getHistory();
@@ -33,19 +31,19 @@ public class History extends Command {
         if (history.size() > 0) {
             StringBuilder s = new StringBuilder();
             history.forEach(x -> s.append("\n\t").append(x));
-            return "Комманда history выполнена, последние 7 комманд:" + s;
+            return getStringFromBundle("historySuccess") + s;
         } else {
-            return "Список выполненных комманд пуст!";
+            return getStringFromBundle("historyEmpty");
         }
     }
 
     @Override
     public String description() {
-        return "Выводит последние 7 комманд." + syntax();
+        return getStringFromBundle("historyDesc") + syntax();
     }
 
     @Override
     public String syntax() {
-        return " Синтаксис: history";
+        return getStringFromBundle("historySyntax");
     }
 }

@@ -21,6 +21,7 @@ public class InterpreterForServer extends Interpreter {
         this.organizations = organizations;
         this.date = date;
         this.dbUnit = dbUnit;
+        setTag("ru-RU");
     }
 
     public void fromStream(InputStream stream, boolean isInteractive) {

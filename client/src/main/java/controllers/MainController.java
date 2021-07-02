@@ -21,7 +21,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -38,8 +37,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Stack;
 
-import static core.Main.getInterpreter;
-import static core.Main.getUser;
+import static core.Main.*;
 import static core.WindowManager.*;
 import static java.lang.Thread.sleep;
 
@@ -68,6 +66,12 @@ public class MainController extends Controller {
 
     @FXML
     public TextField filterField;
+
+    @FXML
+    public ImageView flag;
+
+    @FXML
+    public ChoiceBox<String> languageChoiceBox;
 
     @FXML
     private TableView<Product> tableOfProducts;
@@ -113,9 +117,6 @@ public class MainController extends Controller {
 
     @FXML
     private TableColumn<Product, String> ownerColumn;
-
-    @FXML
-    private Circle languageCircle;
 
     @FXML
     private ChoiceBox<String> commandChoiceBox;
@@ -194,7 +195,36 @@ public class MainController extends Controller {
 
     @FXML
     void initialize() {
+        getInterpreter().setTag(getCurrentBundleName());
         userLabel.setText(getUser().getName());
+        commandButton.setText(getStringFromBundle("executeCommand"));
+        filterButton.setText(getStringFromBundle("applyFilter"));
+        filterField.setPromptText(getStringFromBundle("condition"));
+        proceedButton.setText(getStringFromBundle("proceed"));
+
+        ObservableList<String> languages = FXCollections.observableArrayList("en-CA", "ru-RU", "sl-SI", "sq-AL");
+        languages.forEach(x -> {
+            if (!languageChoiceBox.getItems().contains(x)) {
+                languageChoiceBox.getItems().add(x);
+            }
+        });
+        languageChoiceBox.getSelectionModel().select(getCurrentBundleName());
+        languageChoiceBox.setOnAction(event -> {
+            setCurrentBundle(languageChoiceBox.getValue());
+            initialize();
+        });
+
+        Tooltip.install(flag, getTooltipWithDelay("Change language", 10));
+
+        flag.setImage(new Image("/images/" + getCurrentBundleName() + ".png"));
+
+        flag.setOnMouseEntered(event -> getScene().setCursor(Cursor.HAND));
+
+        flag.setOnMouseExited(event -> getScene().setCursor(Cursor.DEFAULT));
+
+        flag.setOnMouseClicked(event -> {
+            languageChoiceBox.show();
+        });
 
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -226,7 +256,7 @@ public class MainController extends Controller {
         commands.addAll(commandsAndModes.keySet());
         commandChoiceBox.setItems(commands);
 
-        Tooltip.install(commandMirrorLabel, getTooltipWithDelay("Выбрать команду", 10));
+        Tooltip.install(commandMirrorLabel, getTooltipWithDelay(getStringFromBundle("chooseCommand"), 10));
 
         commandMirrorLabel.setOnMouseClicked(event -> commandChoiceBox.show());
 
@@ -234,7 +264,7 @@ public class MainController extends Controller {
 
         commandMirrorLabel.setOnMouseExited(event -> getScene().setCursor(Cursor.DEFAULT));
 
-        Tooltip.install(commandChoiceBox, getTooltipWithDelay("Выбрать команду", 10));
+        Tooltip.install(commandChoiceBox, getTooltipWithDelay(getStringFromBundle("chooseCommand"), 10));
 
         commandChoiceBox.setOnAction(event -> {
             commandMirrorLabel.setText(commandChoiceBox.getValue());
@@ -284,7 +314,7 @@ public class MainController extends Controller {
         fields.add("owner");
         filterChoiceBox.setItems(fields);
 
-        Tooltip.install(filterMirrorLabel, getTooltipWithDelay("Выбрать поле", 10));
+        Tooltip.install(filterMirrorLabel, getTooltipWithDelay(getStringFromBundle("chooseField"), 10));
 
         filterMirrorLabel.setOnMouseClicked(event -> filterChoiceBox.show());
 
@@ -292,7 +322,7 @@ public class MainController extends Controller {
 
         filterMirrorLabel.setOnMouseExited(event -> getScene().setCursor(Cursor.DEFAULT));
 
-        Tooltip.install(filterChoiceBox, getTooltipWithDelay("Выбрать поле", 10));
+        Tooltip.install(filterChoiceBox, getTooltipWithDelay(getStringFromBundle("chooseField"), 10));
 
         filterChoiceBox.setOnAction(event -> {
             filterMirrorLabel.setText(filterChoiceBox.getValue());
@@ -316,7 +346,7 @@ public class MainController extends Controller {
                     filterIsSet = true;
                 } else {
                     filterField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
-                    showAlert(AlertType.ERROR, "ERROR", "Ошибка при установке фильтра", "Неверный формат условия!\nПримеры корректных условий (числа):\n>5\n<5\n=5\n>=5\n<=5\n!=5\nПримеры корректных условий (строки):\n=text\n!=text");
+                    showAlert(AlertType.ERROR, "ERROR", getStringFromBundle("filterAlertHeader"), getStringFromBundle("filterConditionAlertContent"));
                     underlineFilterCommand.setStroke(Color.web("white"));
                 }
                 getScene().setCursor(Cursor.DEFAULT);
@@ -337,7 +367,7 @@ public class MainController extends Controller {
             }
         });
 
-        Tooltip.install(filterField, getTooltipWithDelay("Условие", 300));
+        Tooltip.install(filterField, getTooltipWithDelay(getStringFromBundle("condition"), 300));
 
         filterField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
@@ -351,7 +381,7 @@ public class MainController extends Controller {
 
         tableOfProducts.setRowFactory(tv -> {
             TableRow<Product> row = new TableRow<>();
-            MenuItem itemUpdate = new MenuItem("Обновить");
+            MenuItem itemUpdate = new MenuItem(getStringFromBundle("update"));
             itemUpdate.setOnAction(event -> {
                 chosenProduct = row.getItem();
                 commandChoiceBox.setValue("update");
@@ -359,17 +389,17 @@ public class MainController extends Controller {
                 prepareCommand();
                 setFields();
             });
-            MenuItem itemRemove = new MenuItem("Удалить");
+            MenuItem itemRemove = new MenuItem(getStringFromBundle("remove"));
             itemRemove.setOnAction(event -> {
                 commandChoiceBox.setValue("remove_by_id");
                 commandMirrorLabel.setText("remove_by_id");
                 String result = getInterpreter().fromString("remove_by_id", row.getItem().getId().toString());
                 if (result == null) {
-                    showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка при отправке/получении команды", Client.getContent());
+                    showAlert(Alert.AlertType.ERROR, "ERROR", getStringFromBundle("sendErrorAlertHeader"), Client.getContent());
                 } else if (result.isEmpty()) {
-                    showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка при проверке аргументов команды", getInterpreter().getContent());
+                    showAlert(Alert.AlertType.ERROR, "ERROR", getStringFromBundle("prepareErrorAlertHeader"), getInterpreter().getContent());
                 } else {
-                    showAlert(Alert.AlertType.INFORMATION, "INFO", "Команда " + commandMirrorLabel.getText() + " вернула следующий результат:", result);
+                    showAlert(Alert.AlertType.INFORMATION, "INFO", getStringFromBundle("command") + commandMirrorLabel.getText() + getStringFromBundle("returnedResult"), result);
                 }
             });
             ContextMenu menu = new ContextMenu(itemUpdate, itemRemove);
@@ -386,7 +416,7 @@ public class MainController extends Controller {
             });
             row.setOnMouseEntered(event -> {
                 if (!row.isEmpty()) {
-                    Tooltip.install(row, getTooltipWithDelay("Нажмите дважды, чтобы обновить элемент", 700));
+                    Tooltip.install(row, getTooltipWithDelay(getStringFromBundle("updateTooltip"), 700));
                     if (!menu.isShowing()) {
                         getScene().setCursor(Cursor.HAND);
                     }
@@ -431,7 +461,7 @@ public class MainController extends Controller {
             getScene().setCursor(Cursor.DEFAULT);
         });
 
-        Tooltip.install(signoutImage, getTooltipWithDelay("Выйти", 10));
+        Tooltip.install(signoutImage, getTooltipWithDelay(getStringFromBundle("signOut"), 10));
 
         signoutImage.setOnMouseEntered(event -> {
             getScene().setCursor(Cursor.HAND);
@@ -445,10 +475,10 @@ public class MainController extends Controller {
 
         signoutImage.setOnMouseClicked(event -> {
             try {
-                changeScene("start.fxml", "PRODMAN: Авторизация");
+                changeScene("start.fxml", "PRODMAN: " + getStringFromBundle("startWindowTitle"));
                 synchronizer.cancel();
             } catch (IOException e) {
-                showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка смены сцены", e.getMessage());
+                showAlert(Alert.AlertType.ERROR, "ERROR", getStringFromBundle("changeSceneError"), e.getMessage());
             }
         });
 
@@ -541,7 +571,7 @@ public class MainController extends Controller {
             }
         });
 
-        Tooltip.install(goBackLabel, getTooltipWithDelay("Обратно", 10));
+        Tooltip.install(goBackLabel, getTooltipWithDelay(getStringFromBundle("back"), 10));
 
         goBackLabel.setOnMouseEntered(event -> {
             getScene().setCursor(Cursor.HAND);
@@ -564,21 +594,23 @@ public class MainController extends Controller {
         collectionIsEmpty = false;
 
         synchronizer.setOnSucceeded(event -> {
-            if (errCount < 10) {
+            if (errCount < 4) {
                 showAlert(alertType, title, header, content);
                 underlineFilterCommand.setStroke(Color.web("white"));
                 synchronizer.reset();
                 synchronizer.start();
             } else {
-                showAlert(AlertType.ERROR, "ERROR", "Программа завершает сессию", "Из-за многочисленных ошибок связи с сервером совершён выход из учётной записи. Повторите позже.");
+                showAlert(AlertType.ERROR, "ERROR", getStringFromBundle("stopSessionAlertHeader"), getStringFromBundle("stopSessionAlertContent"));
                 try {
-                    changeScene("start.fxml", "PRODMAN: Авторизация");
+                    changeScene("start.fxml", "PRODMAN: " + getStringFromBundle("startWindowTitle"));
                 } catch (IOException e) {
-                    showAlert(AlertType.ERROR, "ERROR", "Ошибка смены сцены", e.getMessage());
+                    showAlert(AlertType.ERROR, "ERROR", getStringFromBundle("changeSceneError"), e.getMessage());
                 }
             }
         });
-        synchronizer.start();
+        if (!synchronizer.isRunning()) {
+            synchronizer.start();
+        }
     }
 
     private class SynchronizerService extends Service<Void> {
@@ -692,12 +724,12 @@ public class MainController extends Controller {
             case 0:
                 result = getInterpreter().fromString(commandMirrorLabel.getText(), idField.getText());
                 if (result == null) {
-                    showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка при отправке/получении команды", Client.getContent());
+                    showAlert(Alert.AlertType.ERROR, "ERROR", getStringFromBundle("sendErrorAlertHeader"), Client.getContent());
                 } else if (result.isEmpty()) {
-                    showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка при проверке аргументов команды", getInterpreter().getContent());
+                    showAlert(Alert.AlertType.ERROR, "ERROR", getStringFromBundle("prepareErrorAlertHeader"), getInterpreter().getContent());
                     idField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                 } else {
-                    showAlert(Alert.AlertType.INFORMATION, "INFO", "Команда " + commandMirrorLabel.getText() + " вернула следующий результат:", result);
+                    showAlert(Alert.AlertType.INFORMATION, "INFO", getStringFromBundle("command") + commandMirrorLabel.getText() + getStringFromBundle("returnedResult"), result);
                     commandsAnchorPane.setVisible(false);
                     mainAnchorPane.setVisible(true);
                 }
@@ -714,27 +746,27 @@ public class MainController extends Controller {
                         }
                     } catch (NumberFormatException e) {
                         idField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
-                        errors.push("Неправильный ввод id! Требуемый формат: целое положительное число.\n");
+                        errors.push(getStringFromBundle("idError"));
                     }
                 }
                 String name = nameField.getText();
                 if (name == null || name.matches("\\s*")) {
                     nameField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
-                    errors.push("Неправильный ввод названия продукта! Оно не может быть пустой строкой.\n");
+                    errors.push(getStringFromBundle("nameError"));
                 }
                 Double x = null;
                 try {
                     x = Double.parseDouble(xField.getText());
                 } catch (NumberFormatException e) {
                     xField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
-                    errors.push("Неправильный ввод координаты x! Требуемый формат: дробное число.\n");
+                    errors.push(getStringFromBundle("xError"));
                 }
                 Long y = null;
                 try {
                     y = Long.parseLong(yField.getText());
                 } catch (NumberFormatException e) {
                     yField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
-                    errors.push("Неправильный ввод координаты y! Требуемый формат: целое число.\n");
+                    errors.push(getStringFromBundle("yError"));
                 }
                 float price = -1;
                 try {
@@ -744,12 +776,12 @@ public class MainController extends Controller {
                     }
                 } catch (NumberFormatException e) {
                     priceField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
-                    errors.push("Неправильный ввод цены продукта! Требуемый формат: положительное дробное число.\n");
+                    errors.push(getStringFromBundle("priceError"));
                 }
                 String partNumber = partNumField.getText();
                 if (partNumber == null || !partNumber.matches("#\\d{6}")) {
                     partNumField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
-                    errors.push("Неправильный ввод кода производителя! Требуемый формат: #xxxxxx, где x - цифры.\n");
+                    errors.push(getStringFromBundle("partNumError"));
                 }
                 float manufactureCost = -1;
                 try {
@@ -759,7 +791,7 @@ public class MainController extends Controller {
                     }
                 } catch (NumberFormatException e) {
                     manCostField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
-                    errors.push("Неправильный ввод цены производства продукта! Требуемый формат: положительное дробное число.\n");
+                    errors.push(getStringFromBundle("manCostError"));
                 }
                 UnitOfMeasure unitOfMeasure = null;
                 try {
@@ -769,12 +801,12 @@ public class MainController extends Controller {
                     }
                 } catch (IllegalArgumentException e) {
                     uomField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
-                    errors.push("Неправильный ввод единиц измерения! Возможные варианты ввода: " + UnitOfMeasure.valueList() + ".\n");
+                    errors.push(getStringFromBundle("uomError") + UnitOfMeasure.valueList() + ".\n");
                 }
                 String manufacturerName = manNameField.getText();
                 if (manufacturerName == null || manufacturerName.matches("\\s*")) {
                     manNameField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
-                    errors.push("Неправильный ввод названия компании-производителя! Оно не может быть пустой строкой.\n");
+                    errors.push(getStringFromBundle("manNameError"));
                 }
                 Long annualTurnover = null;
                 try {
@@ -786,7 +818,7 @@ public class MainController extends Controller {
                     }
                 } catch (NumberFormatException e) {
                     turnoverField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
-                    errors.push("Неправильный ввод ежегодного оборота компании-производителя! Требуемый формат: пустая строка или целое положительное число.\n");
+                    errors.push(getStringFromBundle("turnoverError"));
                 }
                 Long employeesCount = null;
                 try {
@@ -798,7 +830,7 @@ public class MainController extends Controller {
                     }
                 } catch (NumberFormatException e) {
                     empCountField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
-                    errors.push("Неправильный ввод количества сотрудников компании-производителя! Требуемый формат: пустая строка или целое положительное число.\n");
+                    errors.push(getStringFromBundle("empCountError"));
                 }
                 OrganizationType type = null;
                 try {
@@ -807,7 +839,7 @@ public class MainController extends Controller {
                     }
                 } catch (IllegalArgumentException e) {
                     typeField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
-                    errors.push("Неправильный ввод типа компании-производителя! Возможные варианты ввода: пустая строка, " + OrganizationType.valueList() + ".\n");
+                    errors.push(getStringFromBundle("typeError") + OrganizationType.valueList() + ".\n");
                 }
                 if (errors.isEmpty()) {
                     Organization manufacturer = new Organization(manufacturerName, annualTurnover, employeesCount, type);
@@ -816,20 +848,20 @@ public class MainController extends Controller {
                     product.setId(id);
                     result = getInterpreter().fromString(commandMirrorLabel.getText(), (id != null ? id + " " : "") + product.toStringNoDate());
                     if (result == null) {
-                        showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка при отправке/получении команды", Client.getContent());
+                        showAlert(Alert.AlertType.ERROR, "ERROR", getStringFromBundle("sendErrorAlertHeader"), Client.getContent());
                     } else if (result.isEmpty()) {
-                        showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка при проверке аргументов команды", getInterpreter().getContent());
+                        showAlert(Alert.AlertType.ERROR, "ERROR", getStringFromBundle("prepareErrorAlertHeader"), getInterpreter().getContent());
                     } else if (result.equals("0")) {
-                        showAlert(Alert.AlertType.INFORMATION, "SUCCESS", "Команда " + commandMirrorLabel.getText() + " выполнена успешно!", "");
+                        showAlert(Alert.AlertType.INFORMATION, "SUCCESS", getStringFromBundle("command") + commandMirrorLabel.getText() + getStringFromBundle("executedSuccessfully"), "");
                     } else {
-                        showAlert(Alert.AlertType.ERROR, "ERROR", "Ошибка при выполнении команды", result);
+                        showAlert(Alert.AlertType.ERROR, "ERROR", getStringFromBundle("executeFailure"), result);
                     }
                     commandsAnchorPane.setVisible(false);
                     mainAnchorPane.setVisible(true);
                 } else {
                     StringBuilder builder = new StringBuilder();
                     errors.forEach(builder::append);
-                    showAlert(Alert.AlertType.ERROR, "ERROR", "Воникли ошибки при проверке аргументов команды", builder.toString());
+                    showAlert(Alert.AlertType.ERROR, "ERROR", getStringFromBundle("checkArgumentsAlertHeader"), builder.toString());
                 }
                 break;
         }
@@ -876,7 +908,7 @@ public class MainController extends Controller {
         Tooltip.install(typeField, getTooltipWithDelay("type", 10));
     }
 
-    private boolean mathcesFilter(Product product) {
+    private boolean matchesFilter(Product product) {
         try {
             Field field = product.getClass().getDeclaredField(filterChoiceBox.getValue());
             field.setAccessible(true);
@@ -895,8 +927,8 @@ public class MainController extends Controller {
             if (result == null) {
                 alertType = Alert.AlertType.ERROR;
                 title = "ERROR";
-                header = "Ошибка при установке фильтра";
-                content = "Невозможно сравнить число и строку!";
+                header = getStringFromBundle("filterAlertHeader");
+                content = getStringFromBundle("filterComparisonAlertContent");
                 filterIsSet = false;
                 filterField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                 return false;
@@ -908,8 +940,8 @@ public class MainController extends Controller {
                         } else {
                             alertType = Alert.AlertType.ERROR;
                             title = "ERROR";
-                            header = "Ошибка при установке фильтра";
-                            content = "Неверный формат условия!\nПримеры корректных условий (числа):\n>5\n<5\n=5\n>=5\n<=5\n!=5\nПримеры корректных условий (строки):\n=text\n!=text";
+                            header = getStringFromBundle("filterAlertHeader");
+                            content = getStringFromBundle("filterConditionAlertContent");
                             filterIsSet = false;
                             filterField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                             return false;
@@ -920,8 +952,8 @@ public class MainController extends Controller {
                         } else {
                             alertType = Alert.AlertType.ERROR;
                             title = "ERROR";
-                            header = "Ошибка при установке фильтра";
-                            content = "Неверный формат условия!\nПримеры корректных условий (числа):\n>5\n<5\n=5\n>=5\n<=5\n!=5\nПримеры корректных условий (строки):\n=text\n!=text";
+                            header = getStringFromBundle("filterAlertHeader");
+                            content = getStringFromBundle("filterConditionAlertContent");
                             filterIsSet = false;
                             filterField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                             return false;
@@ -934,8 +966,8 @@ public class MainController extends Controller {
                         } else {
                             alertType = Alert.AlertType.ERROR;
                             title = "ERROR";
-                            header = "Ошибка при установке фильтра";
-                            content = "Неверный формат условия!\nПримеры корректных условий (числа):\n>5\n<5\n=5\n>=5\n<=5\n!=5\nПримеры корректных условий (строки):\n=text\n!=text";
+                            header = getStringFromBundle("filterAlertHeader");
+                            content = getStringFromBundle("filterConditionAlertContent");
                             filterIsSet = false;
                             filterField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                             return false;
@@ -946,8 +978,8 @@ public class MainController extends Controller {
                         } else {
                             alertType = Alert.AlertType.ERROR;
                             title = "ERROR";
-                            header = "Ошибка при установке фильтра";
-                            content = "Неверный формат условия!\nПримеры корректных условий (числа):\n>5\n<5\n=5\n>=5\n<=5\n!=5\nПримеры корректных условий (строки):\n=text\n!=text";
+                            header = getStringFromBundle("filterAlertHeader");
+                            content = getStringFromBundle("filterConditionAlertContent");
                             filterIsSet = false;
                             filterField.setStyle("-fx-background-color: transparent; -fx-background-image: url('/images/field-bg2.png'); -fx-text-fill: #ff2626;");
                             return false;
@@ -992,7 +1024,7 @@ public class MainController extends Controller {
                             product.setCreationDate(LocalDateTime.from(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm").parse(o.get("creationDate").toString())).atZone(ZoneId.of("GMT+3")));
                             product.setUser(new User(o.get("owner").toString()));
                             if (filterIsSet) {
-                                if (mathcesFilter(product)) {
+                                if (matchesFilter(product)) {
                                     observableList.add(product);
                                 } else if (!filterIsSet) {
                                     observableList.add(product);
@@ -1005,7 +1037,7 @@ public class MainController extends Controller {
                             errCount++;
                             alertType = Alert.AlertType.ERROR;
                             title = "ERROR";
-                            header = "Ошибка при загрузке элементов коллекции";
+                            header = getStringFromBundle("collectionLoadAlertHeader");
                             content = e.getMessage();
                             return count + 1;
                         }
@@ -1014,7 +1046,7 @@ public class MainController extends Controller {
                     errCount++;
                     alertType = Alert.AlertType.ERROR;
                     title = "ERROR";
-                    header = "Ошибка при загрузке элементов коллекции";
+                    header = getStringFromBundle("collectionLoadAlertHeader");
                     content = e.getMessage();
                     return count + 1;
                 }
@@ -1022,15 +1054,15 @@ public class MainController extends Controller {
                 collectionIsEmpty = true;
                 alertType = AlertType.INFORMATION;
                 title = "INFO";
-                header = "Коллекция пуста!";
-                content = "Не загружено ни одного элемента.";
+                header = getStringFromBundle("collectionEmptyAlertHeader");
+                content = getStringFromBundle("collectionEmptyAlertContent");
                 return count + 1;
             }
         } else {
             errCount++;
             alertType = Alert.AlertType.ERROR;
             title = "ERROR";
-            header = "Ошибка при загрузке элементов коллекции";
+            header = getStringFromBundle("collectionLoadAlertHeader");
             content = Client.getContent();
             return count + 1;
         }

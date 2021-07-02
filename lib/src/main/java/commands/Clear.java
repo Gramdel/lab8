@@ -6,11 +6,7 @@ import core.DBUnit;
 import core.Interpreter;
 import core.User;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.*;
 
 public class Clear extends Command {
     public Clear(User user) {
@@ -19,8 +15,9 @@ public class Clear extends Command {
 
     @Override
     public boolean prepare(String arg, boolean isInteractive, Interpreter interpreter) {
+        tag = interpreter.getTag();
         if (!arg.matches("\\s*")) {
-            content = "У команды clear не может быть аргументов!";
+            content = getStringFromBundle("clearError");
             return false;
         }
         return true;
@@ -49,16 +46,16 @@ public class Clear extends Command {
                         }
                     }
                     if (!noPermissionErrors && !noSqlErrors) {
-                        return "Не все элементы были удалены, т.к. возникли ошибки SQL и вы не являетесь владельцем некоторых элементов!";
+                        return getStringFromBundle("clearError1");
                     } else if (noPermissionErrors && !noSqlErrors) {
-                        return "Не все элементы были удалены, т.к. возникли ошибки SQL!";
+                        return getStringFromBundle("clearError2");
                     } else if (!noPermissionErrors) {
-                        return "Не все элементы были удалены, т.к. вы не являетесь владельцем некоторых элементов!";
+                        return getStringFromBundle("clearError3");
                     } else {
-                        return "Коллекция очищена!";
+                        return getStringFromBundle("clearSuccess");
                     }
                 } else {
-                    return "Вы не являетесь владельцем ни одного из элементов, поэтому коллекция не очищена!";
+                    return getStringFromBundle("clearError4");
                 }
             } else {
                 boolean noErrors = true;
@@ -74,22 +71,22 @@ public class Clear extends Command {
                     }
                 }
                 if (noErrors) {
-                    return "Коллекция очищена.";
+                    return getStringFromBundle("clearSuccess");
                 } else {
-                    return "Не все элементы были удалены, т.к. возникли ошибки SQL!";
+                    return getStringFromBundle("clearError2");
                 }
             }
         }
-        return "Коллекция пуста, нечего чистить!";
+        return getStringFromBundle("clearError5");
     }
 
     @Override
     public String description() {
-        return "Очищает коллекцию." + syntax();
+        return getStringFromBundle("clearDesc") + syntax();
     }
 
     @Override
     public String syntax() {
-        return " Синтаксис: clear";
+        return getStringFromBundle("clearSyntax");
     }
 }

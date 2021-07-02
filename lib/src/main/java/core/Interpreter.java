@@ -10,6 +10,7 @@ public abstract class Interpreter {
     protected final HashMap<String, Command> commands = new HashMap<>();
     protected final Stack<String> history = new Stack<>();
     protected String content;
+    protected String tag;
 
     public Interpreter(User user) {
         commands.put("add", new Add(user));
@@ -21,11 +22,8 @@ public abstract class Interpreter {
         commands.put("show", new Show(user));
         commands.put("remove_by_id", new RemoveById(user));
         commands.put("update", new Update(user));
-        commands.put("info", new Info(user));
         commands.put("remove_any_by_uom", new RemoveByUOM(user));
-        commands.put("filter_by_manufacturer", new FilterByManufacturer(user));
         commands.put("add_if_max", new AddIfMax(user));
-        commands.put("print_field_descending_price", new PrintPrice(user));
         commands.put("remove_greater", new RemoveGreater(user));
     }
 
@@ -46,5 +44,14 @@ public abstract class Interpreter {
 
     public String getContent() {
         return content;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+        commands.forEach((key, value) -> value.setTag(tag));
+    }
+
+    public String getTag() {
+        return tag;
     }
 }

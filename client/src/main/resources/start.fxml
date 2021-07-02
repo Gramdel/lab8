@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="665" prefWidth="1529" style="-fx-background-color: white;" stylesheets="styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.StartController">
+<AnchorPane fx:id="anchorPane" prefHeight="665" prefWidth="1529" style="-fx-background-color: white;" stylesheets="styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.StartController">
     <children>
         <AnchorPane layoutX="597.0" layoutY="155.0" prefHeight="355.0" prefWidth="335.0" style="-fx-background-image: url('/images/bg.jpg'); -fx-background-position: center center; -fx-background-repeat: stretch; -fx-background-color: #1f368a; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.7), 15, 0.4, 0.0, 0.0);">
             <children>
-                <Button fx:id="authorisationButton" layoutX="11.0" layoutY="14.0" styleClass="transparent-button" text="Авторизация" textFill="white" />
-                <Button fx:id="registrationButton" layoutX="176.0" layoutY="14.0" styleClass="transparent-button" text="Регистрация" textFill="#838aa2" />
+                <Button fx:id="authorisationButton" layoutX="11.0" layoutY="14.0" prefHeight="26.0" prefWidth="150.0" styleClass="transparent-button" text="Авторизация" textFill="white">
+               <padding>
+                  <Insets left="-1.0" right="-1.0" />
+               </padding></Button>
+                <Button fx:id="registrationButton" layoutX="176.0" layoutY="14.0" prefHeight="26.0" prefWidth="148.0" styleClass="transparent-button" text="Регистрация" textFill="#838aa2">
+               <padding>
+                  <Insets left="-1.0" right="-1.0" />
+               </padding></Button>
                 <Line fx:id="underlineLogin" endX="12.55" layoutX="131.0" layoutY="50.0" startX="-104.80000305175781" stroke="#1600d9" strokeWidth="3.0" />
                 <Line fx:id="underlineRegister" endX="12.55" layoutX="296.0" layoutY="50.0" startX="-104.80000305175781" stroke="#1600d9" strokeWidth="3.0" visible="false" />
                 <TextField fx:id="loginField" layoutX="22.0" layoutY="79.0" prefHeight="44.0" prefWidth="290.0" promptText="Логин" style="-fx-background-color: transparent; -fx-background-image: url('/images/field-bg.png'); -fx-text-fill: white;">
@@ -36,6 +44,8 @@
             <Font name="Consolas Bold" size="46.0" />
          </font>
       </Label>
-      <Circle layoutX="849.0" layoutY="79.0" radius="15.0" />
+      <ChoiceBox fx:id="languageChoiceBox" layoutX="834.0" layoutY="64.0" opacity="0.0" prefWidth="150.0" style="-fx-background-color: white;" />
+      <Circle fx:id="languageCircle" layoutX="850.0" layoutY="79.0" radius="15.0" />
+      <ImageView fx:id="flag" fitHeight="28.0" fitWidth="28.0" layoutX="836.0" layoutY="65.0" pickOnBounds="true" preserveRatio="true" />
     </children>
 </AnchorPane>
